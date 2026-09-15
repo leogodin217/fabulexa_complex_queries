@@ -1,0 +1,8 @@
+# Warehouses are release assets, fetched by datasets/<name>/setup.sh
+datasets/*/warehouse.duckdb
+datasets/*/warehouse.duckdb.part
+datasets/*/*.wal
+
+# Local query output
+*.csv
+!datasets/**/*.csv
