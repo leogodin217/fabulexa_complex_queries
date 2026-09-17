@@ -11,6 +11,7 @@ against the tier's reference: same columns, same rows, exactly.
 | `CONVENTIONS.md` | The pinned billing conventions every query implements — read first |
 | `<tier>/reference.sql` | The clean form: one CTE per stage, in spec order; its month spine is the warehouse calendar (`dim_date`), reached from the facts through their `*_date_key` columns |
 | `<tier>/inherited.sql` | The same bill as it would look after years of maintenance — identical output |
+| `personas/` | Three colleagues to ask (`manager.md`, `finance.md`, `data-engineer.md`) as LLM system prompts, plus `examples.md`, worked invoices in tables for made-up accounts — see its [README](personas/README.md) |
 
 The warehouse's data dictionary and the billing spec the queries implement are
 in `datasets/saas-billing/README.md`.

@@ -2,7 +2,11 @@
 datasets/*/warehouse.duckdb
 datasets/*/warehouse.duckdb.part
 datasets/*/*.wal
+datasets/*/warehouse.duckdb.tmp/
 
 # Local query output
 *.csv
 !datasets/**/*.csv
+
+# Working directory for exercises
+work 
