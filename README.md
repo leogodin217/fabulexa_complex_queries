@@ -25,7 +25,7 @@ this repo and fetched by a one-line setup script. Saas-billing contains a data w
 fictional SaaS company. The data should look realistic enough and the billing process is quite 
 complex. See [datasets/saas-billing/README.md](datasets/saas-billing/README.md) for details. 
 
-Download the [DuckDB](releases/download/saas-billing-v1/saas-billing.duckdb) file from releases or use one of the setup scripts in [datasets/saas-billing/]. 
+Download the [DuckDB](https://github.com/leogodin217/fabulexa_complex_queries/releases/download/saas-billing-v1/saas-billing.duckdb) file from releases or use one of the setup scripts in [datasets/saas-billing/]. 
 
 
 ## Exercises
