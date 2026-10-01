@@ -20,7 +20,7 @@ column that proves it.
 
 ## The warehouse
 
-Star schema, DuckDB, UTC, five calendar years 2026-01-01 to 2030-12-31. It
+Star schema, DuckDB, UTC, five years of activity, 2026-01-01 to 2030-12-31. It
 carries every billing *input*. It carries no *outcome*: no invoice table, no
 commit balance, no applied-credit residue. Those are computed.
 
@@ -35,9 +35,19 @@ key to the **account**. Credits and lifecycle intervals key to the
 half-open, `valid_to` NULL on the current row. `dim_company` and
 `dim_user_status` are bounded by DATE; `dim_account_terms` by TIMESTAMP.
 
-**The calendar** is `dim_date`, one row per day, `date_key` = yyyymmdd. Every
-fact carries a `*_date_key` you can join on. Dates the calculation invents,
-like a credit expiry a year out, can fall past 2030-12-31 and have no key.
+**The calendar** is `dim_date`, one row per day, `date_key` = yyyymmdd,
+2025-12-01 to 2031-12-31: wider than the activity on both ends, so a month
+spine grouped over all of it includes December 2025 and all of 2031, which
+have no billing. Bound the spine by each account's billing span. Every fact
+carries a `*_date_key` you can join on, and so do the date bounds of the
+dims: `created_date_key` on `dim_account`, `dim_company` and `dim_user`;
+`valid_from_date_key` / `valid_to_date_key` on the versioned dims (NULL
+`valid_to_date_key` on the current row); `effective_from_date_key` /
+`effective_to_date_key` on `dim_rate_tier`; `starts_date_key` /
+`ends_date_key` on `dim_promotion`; `launched_date_key` on `dim_sku`. The
+shared names make unqualified references and `USING` joins between those dims
+ambiguous. Dates the calculation invents, like a credit expiry a year out,
+fall inside the calendar too (the last expiry is in December 2031).
 
 ### Where each thing lives
 

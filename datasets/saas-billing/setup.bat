@@ -4,9 +4,9 @@ rem Needs: curl, certutil (both ship with Windows 10+).
 setlocal
 cd /d "%~dp0"
 
-set TAG=saas-billing-v1
+set TAG=saas-billing-v2
 set ASSET=saas-billing.duckdb
-set SHA256=8f0df8b86cbcb65a8a920657286b17f32a1fffc37875050db97cbe8a5a4a7fef
+set SHA256=7a0beaaf043961fe7cfc43599741847417d5d799ed4bd5c212e9d087bf395c0b
 set URL=https://github.com/leogodin217/fabulexa_complex_queries/releases/download/%TAG%/%ASSET%
 set OUT=warehouse.duckdb
 

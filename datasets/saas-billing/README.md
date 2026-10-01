@@ -11,6 +11,12 @@ credits, seats and usage — and none of the **outcomes**: there is no invoice
 table, no commit balance, no applied-credit residue. Those are the reference
 query's job, and the spec below is what that query implements.
 
+The exercises themselves — a clean reference query and an inherited one per
+tier, the pinned conventions, and a grader that needs only the DuckDB CLI —
+live in [fabulexa_complex_queries](https://github.com/leogodin217/fabulexa_complex_queries),
+which also publishes this warehouse as a ready-made DuckDB file so the track
+can be run without forge.
+
 ### Billing spec — the reference query's stage order
 
 One invoice per account per calendar month. Stages run in this order; each
@@ -111,10 +117,15 @@ of the inherited query should be able to say which one it implements.
   warehouse elects for accounts (`ACC-#####`). Nothing checks this: a
   ladder row for an id that does not exist joins to zero rows and is never
   reported.
-- `dim_date` spans exactly the five run years, 2026-01-01 to 2030-12-31. A
-  date the query computes — a credit's expiry, a term end a year out — can
-  fall past it and then has no `date_key`; compare such dates as dates or
-  instants rather than keying into the calendar.
+- `dim_date` spans 2025-12-01 to 2031-12-31: the five run years (2026–2030),
+  the month before the first account was provisioned (the anchor month of a
+  month-recursive credit ledger), and the year after the run, so a credit's
+  expiry or a term end a year out still keys into the calendar. A computed
+  date outside that range has no `date_key`; compare such dates as dates or
+  instants rather than keying into the calendar. A month spine grouped over
+  all of `dim_date` includes December 2025 and all of 2031, which have no
+  billing activity; take the spine from the months that have data when that
+  matters.
   `fact_lifecycle_interval.ended_date_key` is NULL on an interval still open
   at the extract's end, like `ended_at`.
 - `dim_account.size_band` is the customer's **headcount** band (employees),
@@ -161,8 +172,11 @@ Columns:
 - `company_id` (VARCHAR): Unique company identifier (CMP-#####).
 - `status` (VARCHAR): CRM lifecycle status: onboarding / active / churned. Renewal reviews do not change it; they are on fact_lifecycle_interval.
 - `created_at` (TIMESTAMP): When the company signed up.
+- `created_date_key` (INTEGER): dim_date.date_key of the day the company signed up.
 - `valid_from` (DATE): Date this version of the row took effect.
+- `valid_from_date_key` (INTEGER): dim_date.date_key of the day this version took effect.
 - `valid_to` (DATE): Date this version was superseded; NULL on the current version.
+- `valid_to_date_key` (INTEGER): dim_date.date_key of the day this version was superseded; NULL on the current version.
 
 Row count: 1368
 
@@ -217,7 +231,9 @@ Columns:
 - `term_commit` (BIGINT): Usage spend (USD) the account committed to for the review term that opened with this version; 0 means no commitment. Consecutive versions whose term_commit changed bound one term. [USD]
 - `allowance_override` (BIGINT): Negotiated included Core units per seat per month; NULL until an enterprise review sets it. Overrides dim_plan_terms.included_units_per_seat when present.
 - `valid_from` (TIMESTAMP): Instant this version of the row took effect.
+- `valid_from_date_key` (INTEGER): dim_date.date_key of the day this version took effect.
 - `valid_to` (TIMESTAMP): Instant this version was superseded; NULL on the current version.
+- `valid_to_date_key` (INTEGER): dim_date.date_key of the day this version was superseded; NULL on the current version.
 
 Row count: 13591
 
@@ -248,6 +264,7 @@ Columns:
 - `standard_rate` (DOUBLE): List price per unit of usage volume; the rate a metered SKU is billed at when it has no ladder rows (Workflow), and the base a custom_tier pct_of_list applies to.
 - `flat_fee` (BIGINT): Monthly fee for a flat-billed SKU; absent on metered SKUs, where the charge comes from rate_tier instead. [USD]
 - `launched_at` (TIMESTAMP): When the SKU entered the catalogue; Workflow launched mid-run and has no usage before this.
+- `launched_date_key` (INTEGER): dim_date.date_key of the day the SKU entered the catalogue.
 
 Row count: 7
 
@@ -264,7 +281,9 @@ Columns:
 - `to_units` (BIGINT): Inclusive upper bound of the band; NULL on the open-ended top band.
 - `rate` (DOUBLE): Price per unit (USD) inside this band, before the account's negotiated pct_of_list_rate. [USD]
 - `effective_from` (TIMESTAMP): Instant this band came into force.
+- `effective_from_date_key` (INTEGER): dim_date.date_key of the day this band came into force.
 - `effective_to` (TIMESTAMP): Instant this band was withdrawn; NULL while still in force.
+- `effective_to_date_key` (INTEGER): dim_date.date_key of the day this band was withdrawn; NULL while still in force.
 
 Row count: 10
 
@@ -279,7 +298,9 @@ Columns:
 - `name` (VARCHAR): Promotion display name.
 - `kind` (VARCHAR): What the promotion grants; free_usage waives rating on the SKU between the record's creation and deactivation times.
 - `starts_at` (TIMESTAMP): Instant the promotion became active.
+- `starts_date_key` (INTEGER): dim_date.date_key of the day the promotion became active.
 - `ends_at` (TIMESTAMP): Instant the promotion ended; NULL if still active at the end of the extract.
+- `ends_date_key` (INTEGER): dim_date.date_key of the day the promotion ended; NULL if still active at the end of the extract.
 
 Row count: 5
 
@@ -319,6 +340,7 @@ Columns:
 - `job_title` (VARCHAR): User's job title as recorded on the seat.
 - `phone` (VARCHAR): User's direct work phone number.
 - `created_at` (TIMESTAMP): When the user's seat was created.
+- `created_date_key` (INTEGER): dim_date.date_key of the day the user's seat was created.
 
 Row count: 9858
 
@@ -331,7 +353,9 @@ Columns:
 - `user_id` (VARCHAR): Unique user identifier (USR-######).
 - `status` (VARCHAR): Seat lifecycle status: provisioned / active / using / offboarded.
 - `valid_from` (DATE): Date this version of the row took effect.
+- `valid_from_date_key` (INTEGER): dim_date.date_key of the day this version took effect.
 - `valid_to` (DATE): Date this version was superseded; NULL on the current version.
+- `valid_to_date_key` (INTEGER): dim_date.date_key of the day this version was superseded; NULL on the current version.
 
 Row count: 24599
 
@@ -394,7 +418,7 @@ Columns:
 - `day_name` (VARCHAR): English weekday name (`Monday` … `Sunday`)
 - `is_weekend` (BOOLEAN): `day_of_week >= 6`
 
-Row count: 1826
+Row count: 2222
 
 ### custom_tier
 
@@ -457,8 +481,8 @@ Row count: 28
 
 ## Emit Identity
 
-- base_format_version: 11
-- base.json SHA-256: dc745d7ba69e12c178707a6e9e2647605f71707b3aeb3b7cef8780a319176b13
+- base_format_version: 12
+- base.json SHA-256: f0afa455bd6d5b0ab1d65bed443d3a950ba7ff273e16efe4c6595437bad8ebf8
 - fork_path: trunk
 - slice_at: 157680000000000000
 - runtime: timezone=UTC, start_datetime=2026-01-01T00:00:00+00:00
