@@ -44,8 +44,9 @@ prints up to 20 differing rows. Consequences:
 - `exercises/<dataset>/CONVENTIONS.md` — the pinned side of every billing ambiguity (as-of
   rules, rounding, month spine, stage definitions). The reference implements this exactly;
   any change to a reference query must be reflected here and vice versa.
-- `datasets/<dataset>/README.md` — data dictionary and business spec, written by
-  fabulexa-forge and copied verbatim. Do not edit by hand.
+- `datasets/<dataset>/README.md` and `<dataset>-dimensional-manifest.json` — data
+  dictionary, business spec and machine-readable manifest (column `references`), written
+  by fabulexa-forge's export and copied verbatim. Do not edit by hand.
 - `datasets/<dataset>/PROVENANCE.md` — source pack, producer version, digests, release tag.
   Regenerating a warehouse produces a new sha256, which must be updated in `setup.sh`
   (`SHA256`, `TAG`) and here.
@@ -59,7 +60,9 @@ prints up to 20 differing rows. Consequences:
   tiers must carry the same value for the same company-month. Fix a bug in one tier's
   reference and propagate it to the others.
 - References: one CTE per spec stage, in stage order, month spine from `dim_date` (never
-  generated), all money in `DECIMAL(28,14)` with a single `ROUND` at the end.
+  generated; the calendar runs 2025-12-01..2031-12-31, past the data at both ends, and
+  each account's billing span bounds the spine), all money in `DECIMAL(28,14)` with a
+  single `ROUND` at the end.
   `materialized` CTE hints are performance-only.
 - Inherited queries are deliberately ugly (comma joins, deep nesting, copy-pasted
   subqueries, 1,600-char lines) but must stay output-identical. Do not "clean them up";

@@ -1,0 +1,3063 @@
+{
+  "anchor": {
+    "start_instant": "2026-01-01T00:00:00+00:00",
+    "timezone": "UTC"
+  },
+  "config": {
+    "base": null,
+    "date_dimension": {
+      "from_": "2025-12-01",
+      "to": "2031-12-31"
+    },
+    "dimensional": {
+      "exclude": null,
+      "tables": [
+        {
+          "columns": [
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": "Unique company identifier (CMP-#####).",
+              "fk": null,
+              "from_": "presentation_id",
+              "lookup": null,
+              "name": "company_id",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": "CRM lifecycle status: onboarding / active / churned. Renewal reviews do not change it; they are on fact_lifecycle_interval.",
+              "fk": null,
+              "from_": "prop__status",
+              "lookup": null,
+              "name": "status",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": {
+                "date_parse": null,
+                "decimal": null,
+                "elapsed": null,
+                "json_precision": null,
+                "ordinal": null,
+                "scd_window": null,
+                "timestamp": {
+                  "as_": null,
+                  "source": "created_sim_time"
+                },
+                "value_map": null
+              },
+              "description": "When the company signed up.",
+              "fk": null,
+              "from_": null,
+              "lookup": null,
+              "name": "created_at",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": {
+                "format": null,
+                "from_": null,
+                "scd_window": null,
+                "source": "created_sim_time"
+              },
+              "derived": null,
+              "description": "dim_date.date_key of the day the company signed up.",
+              "fk": null,
+              "from_": null,
+              "lookup": null,
+              "name": "created_date_key",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": {
+                "date_parse": null,
+                "decimal": null,
+                "elapsed": null,
+                "json_precision": null,
+                "ordinal": null,
+                "scd_window": {
+                  "as_": "date",
+                  "bound": "valid_from"
+                },
+                "timestamp": null,
+                "value_map": null
+              },
+              "description": "Date this version of the row took effect.",
+              "fk": null,
+              "from_": null,
+              "lookup": null,
+              "name": "valid_from",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": {
+                "format": null,
+                "from_": null,
+                "scd_window": "valid_from",
+                "source": null
+              },
+              "derived": null,
+              "description": "dim_date.date_key of the day this version took effect.",
+              "fk": null,
+              "from_": null,
+              "lookup": null,
+              "name": "valid_from_date_key",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": {
+                "date_parse": null,
+                "decimal": null,
+                "elapsed": null,
+                "json_precision": null,
+                "ordinal": null,
+                "scd_window": {
+                  "as_": "date",
+                  "bound": "valid_to"
+                },
+                "timestamp": null,
+                "value_map": null
+              },
+              "description": "Date this version was superseded; NULL on the current version.",
+              "fk": null,
+              "from_": null,
+              "lookup": null,
+              "name": "valid_to",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": {
+                "format": null,
+                "from_": null,
+                "scd_window": "valid_to",
+                "source": null
+              },
+              "derived": null,
+              "description": "dim_date.date_key of the day this version was superseded; NULL on the current version.",
+              "fk": null,
+              "from_": null,
+              "lookup": null,
+              "name": "valid_to_date_key",
+              "null": null
+            }
+          ],
+          "description": "One row per subscribing company, the account holder whose lifecycle runs from onboarding through repeated renewal reviews to churn.",
+          "key": [
+            "company_id",
+            "valid_from"
+          ],
+          "name": "dim_company",
+          "role": "dim",
+          "scd": "type2",
+          "source": {
+            "filter": {
+              "prop__actor_type": "company"
+            },
+            "grain": "records",
+            "kind": "actor",
+            "property": null,
+            "value": null,
+            "where": null
+          }
+        },
+        {
+          "columns": [
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": "Unique account identifier (ACC-#####).",
+              "fk": null,
+              "from_": "presentation_id",
+              "lookup": null,
+              "name": "account_id",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": "dim_company.company_id of the CRM company this account belongs to.",
+              "fk": {
+                "as_of": null,
+                "member_field": null,
+                "member_path": null,
+                "path": [
+                  "prop__company"
+                ],
+                "property": null,
+                "target_key": null,
+                "to": "dim_company",
+                "via": "reference",
+                "where": null
+              },
+              "from_": null,
+              "lookup": null,
+              "name": "company_id",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": "Account display name.",
+              "fk": null,
+              "from_": "prop__name",
+              "lookup": null,
+              "name": "name",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": null,
+              "fk": null,
+              "from_": "prop__domain",
+              "lookup": null,
+              "name": "domain",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": null,
+              "fk": null,
+              "from_": "prop__industry",
+              "lookup": null,
+              "name": "industry",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": "Headcount band of the customer organisation (employees, not seats); it is independent of how many seats the account holds.",
+              "fk": null,
+              "from_": "prop__size_band",
+              "lookup": null,
+              "name": "size_band",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": null,
+              "fk": null,
+              "from_": "prop__hq_city",
+              "lookup": null,
+              "name": "hq_city",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": null,
+              "fk": null,
+              "from_": "prop__hq_subdivision",
+              "lookup": null,
+              "name": "hq_subdivision",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": null,
+              "fk": null,
+              "from_": "prop__hq_postal_code",
+              "lookup": null,
+              "name": "hq_postal_code",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": null,
+              "fk": null,
+              "from_": "prop__hq_area_code",
+              "lookup": null,
+              "name": "hq_area_code",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": null,
+              "fk": null,
+              "from_": "prop__billing_street",
+              "lookup": null,
+              "name": "billing_street",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": null,
+              "fk": null,
+              "from_": "prop__billing_phone",
+              "lookup": null,
+              "name": "billing_phone",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": "Plan tier: starter / professional / enterprise; joins to dim_plan_terms.tier.",
+              "fk": null,
+              "from_": "prop__plan",
+              "lookup": null,
+              "name": "plan",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": null,
+              "fk": null,
+              "from_": "prop__addon_sso",
+              "lookup": null,
+              "name": "addon_sso",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": null,
+              "fk": null,
+              "from_": "prop__addon_support",
+              "lookup": null,
+              "name": "addon_support",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": {
+                "date_parse": null,
+                "decimal": null,
+                "elapsed": null,
+                "json_precision": null,
+                "ordinal": null,
+                "scd_window": null,
+                "timestamp": {
+                  "as_": null,
+                  "source": "created_sim_time"
+                },
+                "value_map": null
+              },
+              "description": "When the account was provisioned; the free trial runs from here for dim_plan_terms.trial_days.",
+              "fk": null,
+              "from_": null,
+              "lookup": null,
+              "name": "created_at",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": {
+                "format": null,
+                "from_": null,
+                "scd_window": null,
+                "source": "created_sim_time"
+              },
+              "derived": null,
+              "description": "dim_date.date_key of the day the account was provisioned; its month is the account's first billing month.",
+              "fk": null,
+              "from_": null,
+              "lookup": null,
+              "name": "created_date_key",
+              "null": null
+            }
+          ],
+          "description": "One row per account, the billing tenant a company provisions — its plan, identity, firmographics, headquarters and billing contact, flat add-ons, and the company it belongs to. The tracked commercial terms live on dim_account_terms.",
+          "key": [
+            "account_id"
+          ],
+          "name": "dim_account",
+          "role": "dim",
+          "scd": "type1",
+          "source": {
+            "filter": {
+              "prop__entity_type": "company_hub"
+            },
+            "grain": "records",
+            "kind": "entity",
+            "property": null,
+            "value": null,
+            "where": null
+          }
+        },
+        {
+          "columns": [
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": "dim_account.account_id of the account these terms belong to.",
+              "fk": null,
+              "from_": "presentation_id",
+              "lookup": null,
+              "name": "account_id",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": null,
+              "fk": null,
+              "from_": "prop__seat_price",
+              "lookup": null,
+              "name": "seat_price",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": "Percent of list this account pays for rated usage; 100 until an enterprise renewal negotiates it down.",
+              "fk": null,
+              "from_": "prop__pct_of_list_rate",
+              "lookup": null,
+              "name": "pct_of_list_rate",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": "Usage spend (USD) the account committed to for the review term that opened with this version; 0 means no commitment. Consecutive versions whose term_commit changed bound one term.",
+              "fk": null,
+              "from_": "prop__term_commit",
+              "lookup": null,
+              "name": "term_commit",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": "Negotiated included Core units per seat per month; NULL until an enterprise review sets it. Overrides dim_plan_terms.included_units_per_seat when present.",
+              "fk": null,
+              "from_": "prop__allowance_override",
+              "lookup": null,
+              "name": "allowance_override",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": {
+                "date_parse": null,
+                "decimal": null,
+                "elapsed": null,
+                "json_precision": null,
+                "ordinal": null,
+                "scd_window": "valid_from",
+                "timestamp": null,
+                "value_map": null
+              },
+              "description": "Instant this version of the row took effect.",
+              "fk": null,
+              "from_": null,
+              "lookup": null,
+              "name": "valid_from",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": {
+                "format": null,
+                "from_": null,
+                "scd_window": "valid_from",
+                "source": null
+              },
+              "derived": null,
+              "description": "dim_date.date_key of the day this version took effect.",
+              "fk": null,
+              "from_": null,
+              "lookup": null,
+              "name": "valid_from_date_key",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": {
+                "date_parse": null,
+                "decimal": null,
+                "elapsed": null,
+                "json_precision": null,
+                "ordinal": null,
+                "scd_window": "valid_to",
+                "timestamp": null,
+                "value_map": null
+              },
+              "description": "Instant this version was superseded; NULL on the current version.",
+              "fk": null,
+              "from_": null,
+              "lookup": null,
+              "name": "valid_to",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": {
+                "format": null,
+                "from_": null,
+                "scd_window": "valid_to",
+                "source": null
+              },
+              "derived": null,
+              "description": "dim_date.date_key of the day this version was superseded; NULL on the current version.",
+              "fk": null,
+              "from_": null,
+              "lookup": null,
+              "name": "valid_to_date_key",
+              "null": null
+            }
+          ],
+          "description": "One row per version of an account's commercial terms — seat price, negotiated usage discount, committed spend, and allowance override — bounded by the interval each version was current for. Each version is an amendment made at a renewal review.",
+          "key": [
+            "account_id",
+            "valid_from"
+          ],
+          "name": "dim_account_terms",
+          "role": "dim",
+          "scd": "type2",
+          "source": {
+            "filter": {
+              "prop__entity_type": "company_hub"
+            },
+            "grain": "records",
+            "kind": "entity",
+            "property": null,
+            "value": null,
+            "where": null
+          }
+        },
+        {
+          "columns": [
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": "Unique plan-terms identifier (PLN-##).",
+              "fk": null,
+              "from_": "presentation_id",
+              "lookup": null,
+              "name": "plan_terms_id",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": "The plan tier this row governs; joins to dim_account.plan.",
+              "fk": null,
+              "from_": "prop__tier",
+              "lookup": null,
+              "name": "tier",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": null,
+              "fk": null,
+              "from_": "prop__list_seat_price",
+              "lookup": null,
+              "name": "list_seat_price",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": null,
+              "fk": null,
+              "from_": "prop__included_units_per_seat",
+              "lookup": null,
+              "name": "included_units_per_seat",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": null,
+              "fk": null,
+              "from_": "prop__trial_days",
+              "lookup": null,
+              "name": "trial_days",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": null,
+              "fk": null,
+              "from_": "prop__credit_validity_days",
+              "lookup": null,
+              "name": "credit_validity_days",
+              "null": null
+            }
+          ],
+          "description": "One row per plan tier's published commercial terms — list seat price, included Core units per seat per month, free-trial length, and credit validity. Joined from dim_account.plan.",
+          "key": [
+            "plan_terms_id"
+          ],
+          "name": "dim_plan_terms",
+          "role": "dim",
+          "scd": "type1",
+          "source": {
+            "filter": {
+              "prop__entity_type": "plan_terms"
+            },
+            "grain": "records",
+            "kind": "entity",
+            "property": null,
+            "value": null,
+            "where": null
+          }
+        },
+        {
+          "columns": [
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": "Unique SKU identifier (SKU-###).",
+              "fk": null,
+              "from_": "presentation_id",
+              "lookup": null,
+              "name": "sku_id",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": "SKU display name.",
+              "fk": null,
+              "from_": "prop__name",
+              "lookup": null,
+              "name": "name",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": null,
+              "fk": null,
+              "from_": "prop__billing_model",
+              "lookup": null,
+              "name": "billing_model",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": "List price per unit of usage volume; the rate a metered SKU is billed at when it has no ladder rows (Workflow), and the base a custom_tier pct_of_list applies to.",
+              "fk": null,
+              "from_": "prop__standard_rate",
+              "lookup": null,
+              "name": "standard_rate",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": null,
+              "fk": null,
+              "from_": "prop__flat_fee",
+              "lookup": null,
+              "name": "flat_fee",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": {
+                "date_parse": null,
+                "decimal": null,
+                "elapsed": null,
+                "json_precision": null,
+                "ordinal": null,
+                "scd_window": null,
+                "timestamp": {
+                  "as_": null,
+                  "source": "created_sim_time"
+                },
+                "value_map": null
+              },
+              "description": "When the SKU entered the catalogue; Workflow launched mid-run and has no usage before this.",
+              "fk": null,
+              "from_": null,
+              "lookup": null,
+              "name": "launched_at",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": {
+                "format": null,
+                "from_": null,
+                "scd_window": null,
+                "source": "created_sim_time"
+              },
+              "derived": null,
+              "description": "dim_date.date_key of the day the SKU entered the catalogue.",
+              "fk": null,
+              "from_": null,
+              "lookup": null,
+              "name": "launched_date_key",
+              "null": null
+            }
+          ],
+          "description": "One row per product line in the catalogue — metered SKUs rated per unit of usage volume through the rate ladder, flat SKUs billed a fixed monthly fee.",
+          "key": [
+            "sku_id"
+          ],
+          "name": "dim_sku",
+          "role": "dim",
+          "scd": "type1",
+          "source": {
+            "filter": {
+              "prop__entity_type": "sku"
+            },
+            "grain": "records",
+            "kind": "entity",
+            "property": null,
+            "value": null,
+            "where": null
+          }
+        },
+        {
+          "columns": [
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": "Unique band identifier (RT-###).",
+              "fk": null,
+              "from_": "presentation_id",
+              "lookup": null,
+              "name": "rate_tier_id",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": "dim_sku.sku_id of the SKU this band prices.",
+              "fk": {
+                "as_of": null,
+                "member_field": null,
+                "member_path": null,
+                "path": [
+                  "prop__sku"
+                ],
+                "property": null,
+                "target_key": null,
+                "to": "dim_sku",
+                "via": "reference",
+                "where": null
+              },
+              "from_": null,
+              "lookup": null,
+              "name": "sku_id",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": null,
+              "fk": null,
+              "from_": "prop__ordinal",
+              "lookup": null,
+              "name": "ordinal",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": null,
+              "fk": null,
+              "from_": "prop__from_units",
+              "lookup": null,
+              "name": "from_units",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": "Inclusive upper bound of the band; NULL on the open-ended top band.",
+              "fk": null,
+              "from_": "prop__to_units",
+              "lookup": null,
+              "name": "to_units",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": "Price per unit (USD) inside this band, before the account's negotiated pct_of_list_rate.",
+              "fk": null,
+              "from_": "prop__rate",
+              "lookup": null,
+              "name": "rate",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": {
+                "date_parse": null,
+                "decimal": null,
+                "elapsed": null,
+                "json_precision": null,
+                "ordinal": null,
+                "scd_window": null,
+                "timestamp": {
+                  "as_": null,
+                  "source": "created_sim_time"
+                },
+                "value_map": null
+              },
+              "description": "Instant this band came into force.",
+              "fk": null,
+              "from_": null,
+              "lookup": null,
+              "name": "effective_from",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": {
+                "format": null,
+                "from_": null,
+                "scd_window": null,
+                "source": "created_sim_time"
+              },
+              "derived": null,
+              "description": "dim_date.date_key of the day this band came into force.",
+              "fk": null,
+              "from_": null,
+              "lookup": null,
+              "name": "effective_from_date_key",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": {
+                "date_parse": null,
+                "decimal": null,
+                "elapsed": null,
+                "json_precision": null,
+                "ordinal": null,
+                "scd_window": null,
+                "timestamp": {
+                  "as_": null,
+                  "source": "deactivated_at"
+                },
+                "value_map": null
+              },
+              "description": "Instant this band was withdrawn; NULL while still in force.",
+              "fk": null,
+              "from_": null,
+              "lookup": null,
+              "name": "effective_to",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": {
+                "format": null,
+                "from_": null,
+                "scd_window": null,
+                "source": "deactivated_at"
+              },
+              "derived": null,
+              "description": "dim_date.date_key of the day this band was withdrawn; NULL while still in force.",
+              "fk": null,
+              "from_": null,
+              "lookup": null,
+              "name": "effective_to_date_key",
+              "null": null
+            }
+          ],
+          "description": "One row per band of a metered SKU's graduated price ladder — cumulative monthly volume bounds and the per-unit rate inside the band. A repriced band is a new row with its own effective window, never an edit of the old one.",
+          "key": [
+            "rate_tier_id"
+          ],
+          "name": "dim_rate_tier",
+          "role": "dim",
+          "scd": "type1",
+          "source": {
+            "filter": {
+              "prop__entity_type": "rate_tier"
+            },
+            "grain": "records",
+            "kind": "entity",
+            "property": null,
+            "value": null,
+            "where": null
+          }
+        },
+        {
+          "columns": [
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": "Unique promotion identifier (PRM-###).",
+              "fk": null,
+              "from_": "presentation_id",
+              "lookup": null,
+              "name": "promotion_id",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": "dim_sku.sku_id of the SKU whose usage the promotion waives.",
+              "fk": {
+                "as_of": null,
+                "member_field": null,
+                "member_path": null,
+                "path": [
+                  "prop__sku"
+                ],
+                "property": null,
+                "target_key": null,
+                "to": "dim_sku",
+                "via": "reference",
+                "where": null
+              },
+              "from_": null,
+              "lookup": null,
+              "name": "sku_id",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": "Promotion display name.",
+              "fk": null,
+              "from_": "prop__name",
+              "lookup": null,
+              "name": "name",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": null,
+              "fk": null,
+              "from_": "prop__kind",
+              "lookup": null,
+              "name": "kind",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": {
+                "date_parse": null,
+                "decimal": null,
+                "elapsed": null,
+                "json_precision": null,
+                "ordinal": null,
+                "scd_window": null,
+                "timestamp": {
+                  "as_": null,
+                  "source": "created_sim_time"
+                },
+                "value_map": null
+              },
+              "description": "Instant the promotion became active.",
+              "fk": null,
+              "from_": null,
+              "lookup": null,
+              "name": "starts_at",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": {
+                "format": null,
+                "from_": null,
+                "scd_window": null,
+                "source": "created_sim_time"
+              },
+              "derived": null,
+              "description": "dim_date.date_key of the day the promotion became active.",
+              "fk": null,
+              "from_": null,
+              "lookup": null,
+              "name": "starts_date_key",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": {
+                "date_parse": null,
+                "decimal": null,
+                "elapsed": null,
+                "json_precision": null,
+                "ordinal": null,
+                "scd_window": null,
+                "timestamp": {
+                  "as_": null,
+                  "source": "deactivated_at"
+                },
+                "value_map": null
+              },
+              "description": "Instant the promotion ended; NULL if still active at the end of the extract.",
+              "fk": null,
+              "from_": null,
+              "lookup": null,
+              "name": "ends_at",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": {
+                "format": null,
+                "from_": null,
+                "scd_window": null,
+                "source": "deactivated_at"
+              },
+              "derived": null,
+              "description": "dim_date.date_key of the day the promotion ended; NULL if still active at the end of the extract.",
+              "fk": null,
+              "from_": null,
+              "lookup": null,
+              "name": "ends_date_key",
+              "null": null
+            }
+          ],
+          "description": "One row per dated campaign that waives rating on one SKU while active — the billing-side record of each spring push.",
+          "key": [
+            "promotion_id"
+          ],
+          "name": "dim_promotion",
+          "role": "dim",
+          "scd": "type1",
+          "source": {
+            "filter": {
+              "prop__entity_type": "promotion"
+            },
+            "grain": "records",
+            "kind": "entity",
+            "property": null,
+            "value": null,
+            "where": null
+          }
+        },
+        {
+          "columns": [
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": "Unique credit identifier (CRD-#####).",
+              "fk": null,
+              "from_": "presentation_id",
+              "lookup": null,
+              "name": "credit_id",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": "dim_company.company_id of the company the credit was issued to; reach its account through dim_account.company_id.",
+              "fk": {
+                "as_of": null,
+                "member_field": null,
+                "member_path": null,
+                "path": [
+                  "prop__company"
+                ],
+                "property": null,
+                "target_key": null,
+                "to": "dim_company",
+                "via": "reference",
+                "where": null
+              },
+              "from_": null,
+              "lookup": null,
+              "name": "company_id",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": "Face value of the credit (USD) at issue.",
+              "fk": null,
+              "from_": "prop__amount",
+              "lookup": null,
+              "name": "amount",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": null,
+              "fk": null,
+              "from_": "prop__reason",
+              "lookup": null,
+              "name": "reason",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": {
+                "date_parse": null,
+                "decimal": null,
+                "elapsed": null,
+                "json_precision": null,
+                "ordinal": null,
+                "scd_window": null,
+                "timestamp": {
+                  "as_": null,
+                  "source": "created_sim_time"
+                },
+                "value_map": null
+              },
+              "description": "When the credit was issued; it expires issued_at + dim_plan_terms.credit_validity_days later.",
+              "fk": null,
+              "from_": null,
+              "lookup": null,
+              "name": "issued_at",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": {
+                "format": null,
+                "from_": null,
+                "scd_window": null,
+                "source": "created_sim_time"
+              },
+              "derived": null,
+              "description": "dim_date.date_key of the issue day; the credit enters the ledger in that month.",
+              "fk": null,
+              "from_": null,
+              "lookup": null,
+              "name": "issued_date_key",
+              "null": null
+            }
+          ],
+          "description": "One row per one-time credit issued to a company after a renewal review — face value and reason. Whether and when it is consumed against invoices is derived by the billing query, never stored.",
+          "key": [
+            "credit_id"
+          ],
+          "name": "fact_credit",
+          "role": "fact",
+          "scd": null,
+          "source": {
+            "filter": {
+              "prop__entity_type": "credit"
+            },
+            "grain": "records",
+            "kind": "entity",
+            "property": null,
+            "value": null,
+            "where": null
+          }
+        },
+        {
+          "columns": [
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": "Unique user identifier (USR-######).",
+              "fk": null,
+              "from_": "presentation_id",
+              "lookup": null,
+              "name": "user_id",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": "dim_account.account_id of the account this user's seat belongs to.",
+              "fk": {
+                "as_of": null,
+                "member_field": null,
+                "member_path": null,
+                "path": [
+                  "prop__company"
+                ],
+                "property": null,
+                "target_key": null,
+                "to": "dim_account",
+                "via": "reference",
+                "where": null
+              },
+              "from_": null,
+              "lookup": null,
+              "name": "account_id",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": null,
+              "fk": null,
+              "from_": "prop__first_name",
+              "lookup": null,
+              "name": "first_name",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": null,
+              "fk": null,
+              "from_": "prop__last_name",
+              "lookup": null,
+              "name": "last_name",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": null,
+              "fk": null,
+              "from_": "prop__email",
+              "lookup": null,
+              "name": "email",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": null,
+              "fk": null,
+              "from_": "prop__job_title",
+              "lookup": null,
+              "name": "job_title",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": null,
+              "fk": null,
+              "from_": "prop__phone",
+              "lookup": null,
+              "name": "phone",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": {
+                "date_parse": null,
+                "decimal": null,
+                "elapsed": null,
+                "json_precision": null,
+                "ordinal": null,
+                "scd_window": null,
+                "timestamp": {
+                  "as_": null,
+                  "source": "created_sim_time"
+                },
+                "value_map": null
+              },
+              "description": "When the user's seat was created.",
+              "fk": null,
+              "from_": null,
+              "lookup": null,
+              "name": "created_at",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": {
+                "format": null,
+                "from_": null,
+                "scd_window": null,
+                "source": "created_sim_time"
+              },
+              "derived": null,
+              "description": "dim_date.date_key of the day the user's seat was created.",
+              "fk": null,
+              "from_": null,
+              "lookup": null,
+              "name": "created_date_key",
+              "null": null
+            }
+          ],
+          "description": "One row per seat holder, an individual working inside a subscribing company's account.",
+          "key": [
+            "user_id"
+          ],
+          "name": "dim_user",
+          "role": "dim",
+          "scd": "type1",
+          "source": {
+            "filter": {
+              "prop__actor_type": "user"
+            },
+            "grain": "records",
+            "kind": "actor",
+            "property": null,
+            "value": null,
+            "where": null
+          }
+        },
+        {
+          "columns": [
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": "Unique user identifier (USR-######).",
+              "fk": null,
+              "from_": "presentation_id",
+              "lookup": null,
+              "name": "user_id",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": "Seat lifecycle status: provisioned / active / using / offboarded.",
+              "fk": null,
+              "from_": "prop__status",
+              "lookup": null,
+              "name": "status",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": {
+                "date_parse": null,
+                "decimal": null,
+                "elapsed": null,
+                "json_precision": null,
+                "ordinal": null,
+                "scd_window": {
+                  "as_": "date",
+                  "bound": "valid_from"
+                },
+                "timestamp": null,
+                "value_map": null
+              },
+              "description": "Date this version of the row took effect.",
+              "fk": null,
+              "from_": null,
+              "lookup": null,
+              "name": "valid_from",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": {
+                "format": null,
+                "from_": null,
+                "scd_window": "valid_from",
+                "source": null
+              },
+              "derived": null,
+              "description": "dim_date.date_key of the day this version took effect.",
+              "fk": null,
+              "from_": null,
+              "lookup": null,
+              "name": "valid_from_date_key",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": {
+                "date_parse": null,
+                "decimal": null,
+                "elapsed": null,
+                "json_precision": null,
+                "ordinal": null,
+                "scd_window": {
+                  "as_": "date",
+                  "bound": "valid_to"
+                },
+                "timestamp": null,
+                "value_map": null
+              },
+              "description": "Date this version was superseded; NULL on the current version.",
+              "fk": null,
+              "from_": null,
+              "lookup": null,
+              "name": "valid_to",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": {
+                "format": null,
+                "from_": null,
+                "scd_window": "valid_to",
+                "source": null
+              },
+              "derived": null,
+              "description": "dim_date.date_key of the day this version was superseded; NULL on the current version.",
+              "fk": null,
+              "from_": null,
+              "lookup": null,
+              "name": "valid_to_date_key",
+              "null": null
+            }
+          ],
+          "description": "One row per seat's status interval, tracking a user's lifecycle from provisioned through active/using to offboarded; billable seat-days are the active/using intervals.",
+          "key": [
+            "user_id",
+            "valid_from"
+          ],
+          "name": "dim_user_status",
+          "role": "dim",
+          "scd": "type2",
+          "source": {
+            "filter": {
+              "prop__actor_type": "user"
+            },
+            "grain": "records",
+            "kind": "actor",
+            "property": null,
+            "value": null,
+            "where": null
+          }
+        },
+        {
+          "columns": [
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": "Sequential event id (0-based), ascending in event order.",
+              "fk": null,
+              "from_": "record_index",
+              "lookup": null,
+              "name": "usage_event_id",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": {
+                "date_parse": null,
+                "decimal": null,
+                "elapsed": null,
+                "json_precision": null,
+                "ordinal": null,
+                "scd_window": null,
+                "timestamp": {
+                  "as_": null,
+                  "source": "created_sim_time"
+                },
+                "value_map": null
+              },
+              "description": "When the usage session occurred.",
+              "fk": null,
+              "from_": null,
+              "lookup": null,
+              "name": "occurred_at",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": {
+                "format": null,
+                "from_": null,
+                "scd_window": null,
+                "source": "created_sim_time"
+              },
+              "derived": null,
+              "description": "dim_date.date_key of the session's day; usage is billed in that month.",
+              "fk": null,
+              "from_": null,
+              "lookup": null,
+              "name": "occurred_date_key",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": "dim_user.user_id of the user who ran the session.",
+              "fk": {
+                "as_of": null,
+                "member_field": null,
+                "member_path": null,
+                "path": [
+                  "prop__journey_instance",
+                  "prop__actor"
+                ],
+                "property": null,
+                "target_key": null,
+                "to": "dim_user",
+                "via": "reference",
+                "where": null
+              },
+              "from_": null,
+              "lookup": null,
+              "name": "user_id",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": "dim_sku.sku_id of the product line the session was recorded against.",
+              "fk": {
+                "as_of": null,
+                "member_field": "entity",
+                "member_path": null,
+                "path": null,
+                "property": "bindings",
+                "target_key": null,
+                "to": "dim_sku",
+                "via": "membership",
+                "where": {
+                  "elem__role_name": "sku"
+                }
+              },
+              "from_": null,
+              "lookup": null,
+              "name": "sku_id",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": {
+                "date_parse": null,
+                "decimal": null,
+                "elapsed": null,
+                "json_precision": {
+                  "from_": "prop__context",
+                  "leaves": {
+                    "volume": 2
+                  }
+                },
+                "ordinal": null,
+                "scd_window": null,
+                "timestamp": null,
+                "value_map": null
+              },
+              "description": "JSON detail of the usage session; its `volume` leaf is the metered quantity in the SKU's units, rounded to 2dp.",
+              "fk": null,
+              "from_": null,
+              "lookup": null,
+              "name": "context",
+              "null": null
+            }
+          ],
+          "description": "One row per product usage session — the volume a seat holder ran, attributed to the SKU the session bound.",
+          "key": [
+            "usage_event_id"
+          ],
+          "name": "fact_usage_event",
+          "role": "fact",
+          "scd": null,
+          "source": {
+            "filter": null,
+            "grain": "records",
+            "kind": "tick_decision",
+            "property": null,
+            "value": null,
+            "where": null
+          }
+        },
+        {
+          "columns": [
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": "Id of the lifecycle this interval belongs to; rows sharing an id form one company or user lifecycle timeline.",
+              "fk": null,
+              "from_": "record_id",
+              "lookup": null,
+              "name": "lifecycle_id",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": "Which lifecycle this is: company_lifecycle or user_lifecycle.",
+              "fk": null,
+              "from_": null,
+              "lookup": {
+                "path": null,
+                "property": "journey_type",
+                "to": null
+              },
+              "name": "lifecycle_type",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": "dim_company.company_id for company_lifecycle rows; NULL on user_lifecycle rows.",
+              "fk": {
+                "as_of": null,
+                "member_field": null,
+                "member_path": null,
+                "path": [
+                  "prop__actor"
+                ],
+                "property": null,
+                "target_key": null,
+                "to": "dim_company",
+                "via": "reference",
+                "where": null
+              },
+              "from_": null,
+              "lookup": null,
+              "name": "company_id",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": "dim_user.user_id for user_lifecycle rows; NULL on company_lifecycle rows.",
+              "fk": {
+                "as_of": null,
+                "member_field": null,
+                "member_path": null,
+                "path": [
+                  "prop__actor"
+                ],
+                "property": null,
+                "target_key": null,
+                "to": "dim_user",
+                "via": "reference",
+                "where": null
+              },
+              "from_": null,
+              "lookup": null,
+              "name": "user_id",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": null,
+              "description": "Lifecycle state occupied during this interval.",
+              "fk": null,
+              "from_": "value",
+              "lookup": null,
+              "name": "state",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": {
+                "date_parse": null,
+                "decimal": null,
+                "elapsed": null,
+                "json_precision": null,
+                "ordinal": null,
+                "scd_window": null,
+                "timestamp": {
+                  "as_": null,
+                  "source": "sim_time"
+                },
+                "value_map": null
+              },
+              "description": "When the lifecycle entered this state.",
+              "fk": null,
+              "from_": null,
+              "lookup": null,
+              "name": "started_at",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": null,
+              "derived": {
+                "date_parse": null,
+                "decimal": null,
+                "elapsed": null,
+                "json_precision": null,
+                "ordinal": null,
+                "scd_window": null,
+                "timestamp": {
+                  "as_": null,
+                  "source": "lead_sim_time"
+                },
+                "value_map": null
+              },
+              "description": "When the lifecycle left this state; NULL if it was still in this state at the end of the extract.",
+              "fk": null,
+              "from_": null,
+              "lookup": null,
+              "name": "ended_at",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": {
+                "format": null,
+                "from_": null,
+                "scd_window": null,
+                "source": "sim_time"
+              },
+              "derived": null,
+              "description": "dim_date.date_key of the day the state was entered.",
+              "fk": null,
+              "from_": null,
+              "lookup": null,
+              "name": "started_date_key",
+              "null": null
+            },
+            {
+              "correlation": null,
+              "date_ref": {
+                "format": null,
+                "from_": null,
+                "scd_window": null,
+                "source": "lead_sim_time"
+              },
+              "derived": null,
+              "description": "dim_date.date_key of the day the state was left; NULL while still occupied.",
+              "fk": null,
+              "from_": null,
+              "lookup": null,
+              "name": "ended_date_key",
+              "null": null
+            }
+          ],
+          "description": "One row per state interval occupied by a company or user lifecycle.",
+          "key": [
+            "lifecycle_id",
+            "started_at"
+          ],
+          "name": "fact_lifecycle_interval",
+          "role": "fact",
+          "scd": null,
+          "source": {
+            "filter": null,
+            "grain": "history_interval",
+            "kind": "journey_instance",
+            "property": "current_state",
+            "value": null,
+            "where": null
+          }
+        }
+      ]
+    },
+    "incremental": null,
+    "keys": {
+      "actor": "presentation_id",
+      "entity": "presentation_id"
+    },
+    "mode": "dimensional",
+    "readme_overlay": "README-overlay.md",
+    "rebase": null,
+    "source": null,
+    "supplements": [
+      {
+        "columns": {
+          "account_id": "VARCHAR",
+          "effective_from": "DATE",
+          "effective_to": "DATE",
+          "from_units": "BIGINT",
+          "ordinal": "BIGINT",
+          "pct_of_list": "BIGINT",
+          "rate": "DECIMAL(6, 4)",
+          "sku_id": "VARCHAR",
+          "to_units": "BIGINT"
+        },
+        "description": "Negotiated per-account price ladders for the largest enterprise accounts, maintained by account management outside the product. Rows here override dim_rate_tier for that account and SKU while effective; forge carries them verbatim and enforces no reference.",
+        "descriptions": {
+          "account_id": "dim_account.account_id the ladder belongs to (ACC-#####); not checked against the warehouse.",
+          "effective_from": "First day the ladder applies, one of the account's renewal-review dates.",
+          "effective_to": "Last day the ladder applies (inclusive); empty while still in force.",
+          "from_units": "Inclusive lower bound of cumulative monthly volume the band applies to.",
+          "ordinal": "Position of the band within its ladder, from 1 upward; restarts at 1 in each effective window.",
+          "pct_of_list": "Percent of dim_sku.standard_rate charged inside the band, replacing the account's pct_of_list_rate; empty when the row carries a rate.",
+          "rate": "Negotiated price per unit (USD) inside the band; empty when the row is priced as pct_of_list instead.",
+          "sku_id": "dim_sku.sku_id the ladder prices (SKU-###); not checked against the warehouse.",
+          "to_units": "Inclusive upper bound of the band; empty on the open-ended top band."
+        },
+        "file": "custom_tier.csv",
+        "name": "custom_tier",
+        "rows": null
+      }
+    ]
+  },
+  "emit": {
+    "base_format_version": 12,
+    "fork_path": "trunk",
+    "runtime": {
+      "start_datetime": "2026-01-01T00:00:00+00:00",
+      "timezone": "UTC"
+    },
+    "sidecar_sha256": "f0afa455bd6d5b0ab1d65bed443d3a950ba7ff273e16efe4c6595437bad8ebf8",
+    "slice_at": 157680000000000000
+  },
+  "forge_version": "0.0.1",
+  "format": "duckdb",
+  "incremental": null,
+  "manifest_format_version": 5,
+  "mode": "dimensional",
+  "scenario_description": "A B2B SaaS vendor over five years, emitted as billing inputs rather than invoices: companies sign up on a plan tier and provision a hub of seats, their users cycle weekly between using the product and sitting idle, and a repeating renewal review renegotiates the account's seat price, usage discount, committed spend and allowance — or ends it — while a follow-up review sometimes issues a credit. The rate card (plan terms, graduated per-SKU tiers, flat add-ons) and the dated free-usage promotions are data the invoice query joins to; no billed amount is ever stored.",
+  "scenario_name": "SaaS Billing",
+  "tables": [
+    {
+      "calendar": null,
+      "columns": [
+        {
+          "description": "Unique company identifier (CMP-#####).",
+          "enum_options": null,
+          "name": "company_id",
+          "references": null,
+          "type": "VARCHAR",
+          "unit": null
+        },
+        {
+          "description": "CRM lifecycle status: onboarding / active / churned. Renewal reviews do not change it; they are on fact_lifecycle_interval.",
+          "enum_options": null,
+          "name": "status",
+          "references": null,
+          "type": "VARCHAR",
+          "unit": null
+        },
+        {
+          "description": "When the company signed up.",
+          "enum_options": null,
+          "name": "created_at",
+          "references": null,
+          "type": "TIMESTAMP",
+          "unit": null
+        },
+        {
+          "description": "dim_date.date_key of the day the company signed up.",
+          "enum_options": null,
+          "name": "created_date_key",
+          "references": "dim_date",
+          "type": "INTEGER",
+          "unit": null
+        },
+        {
+          "description": "Date this version of the row took effect.",
+          "enum_options": null,
+          "name": "valid_from",
+          "references": null,
+          "type": "DATE",
+          "unit": null
+        },
+        {
+          "description": "dim_date.date_key of the day this version took effect.",
+          "enum_options": null,
+          "name": "valid_from_date_key",
+          "references": "dim_date",
+          "type": "INTEGER",
+          "unit": null
+        },
+        {
+          "description": "Date this version was superseded; NULL on the current version.",
+          "enum_options": null,
+          "name": "valid_to",
+          "references": null,
+          "type": "DATE",
+          "unit": null
+        },
+        {
+          "description": "dim_date.date_key of the day this version was superseded; NULL on the current version.",
+          "enum_options": null,
+          "name": "valid_to_date_key",
+          "references": "dim_date",
+          "type": "INTEGER",
+          "unit": null
+        }
+      ],
+      "description": "One row per subscribing company, the account holder whose lifecycle runs from onboarding through repeated renewal reviews to churn.",
+      "name": "dim_company",
+      "primary_key": null,
+      "row_count": 1368,
+      "supplement": null,
+      "unique": null
+    },
+    {
+      "calendar": null,
+      "columns": [
+        {
+          "description": "Unique account identifier (ACC-#####).",
+          "enum_options": null,
+          "name": "account_id",
+          "references": null,
+          "type": "VARCHAR",
+          "unit": null
+        },
+        {
+          "description": "dim_company.company_id of the CRM company this account belongs to.",
+          "enum_options": null,
+          "name": "company_id",
+          "references": "dim_company",
+          "type": "VARCHAR",
+          "unit": null
+        },
+        {
+          "description": "Account display name.",
+          "enum_options": null,
+          "name": "name",
+          "references": null,
+          "type": "VARCHAR",
+          "unit": null
+        },
+        {
+          "description": "Company account's web domain.",
+          "enum_options": null,
+          "name": "domain",
+          "references": null,
+          "type": "VARCHAR",
+          "unit": null
+        },
+        {
+          "description": "Industry sector of the customer organisation.",
+          "enum_options": null,
+          "name": "industry",
+          "references": null,
+          "type": "VARCHAR",
+          "unit": null
+        },
+        {
+          "description": "Headcount band of the customer organisation (employees, not seats); it is independent of how many seats the account holds.",
+          "enum_options": null,
+          "name": "size_band",
+          "references": null,
+          "type": "VARCHAR",
+          "unit": null
+        },
+        {
+          "description": "Headquarters location of the customer organisation.",
+          "enum_options": null,
+          "name": "hq_city",
+          "references": null,
+          "type": "VARCHAR",
+          "unit": null
+        },
+        {
+          "description": "Headquarters location of the customer organisation.",
+          "enum_options": null,
+          "name": "hq_subdivision",
+          "references": null,
+          "type": "VARCHAR",
+          "unit": null
+        },
+        {
+          "description": "Headquarters location of the customer organisation.",
+          "enum_options": null,
+          "name": "hq_postal_code",
+          "references": null,
+          "type": "VARCHAR",
+          "unit": null
+        },
+        {
+          "description": "Headquarters location of the customer organisation.",
+          "enum_options": null,
+          "name": "hq_area_code",
+          "references": null,
+          "type": "VARCHAR",
+          "unit": null
+        },
+        {
+          "description": "Street line of the account's billing address.",
+          "enum_options": null,
+          "name": "billing_street",
+          "references": null,
+          "type": "VARCHAR",
+          "unit": null
+        },
+        {
+          "description": "Billing contact phone number for the account.",
+          "enum_options": null,
+          "name": "billing_phone",
+          "references": null,
+          "type": "VARCHAR",
+          "unit": null
+        },
+        {
+          "description": "Plan tier: starter / professional / enterprise; joins to dim_plan_terms.tier.",
+          "enum_options": [
+            {
+              "description": null,
+              "value": "starter"
+            },
+            {
+              "description": null,
+              "value": "professional"
+            },
+            {
+              "description": null,
+              "value": "enterprise"
+            }
+          ],
+          "name": "plan",
+          "references": null,
+          "type": "VARCHAR",
+          "unit": null
+        },
+        {
+          "description": "'yes' when the account subscribes to the flat-billed sso SKU, else 'no'.",
+          "enum_options": [
+            {
+              "description": null,
+              "value": "no"
+            },
+            {
+              "description": null,
+              "value": "yes"
+            }
+          ],
+          "name": "addon_sso",
+          "references": null,
+          "type": "VARCHAR",
+          "unit": null
+        },
+        {
+          "description": "'yes' when the account subscribes to the flat-billed premium_support SKU, else 'no'.",
+          "enum_options": [
+            {
+              "description": null,
+              "value": "no"
+            },
+            {
+              "description": null,
+              "value": "yes"
+            }
+          ],
+          "name": "addon_support",
+          "references": null,
+          "type": "VARCHAR",
+          "unit": null
+        },
+        {
+          "description": "When the account was provisioned; the free trial runs from here for dim_plan_terms.trial_days.",
+          "enum_options": null,
+          "name": "created_at",
+          "references": null,
+          "type": "TIMESTAMP",
+          "unit": null
+        },
+        {
+          "description": "dim_date.date_key of the day the account was provisioned; its month is the account's first billing month.",
+          "enum_options": null,
+          "name": "created_date_key",
+          "references": "dim_date",
+          "type": "INTEGER",
+          "unit": null
+        }
+      ],
+      "description": "One row per account, the billing tenant a company provisions — its plan, identity, firmographics, headquarters and billing contact, flat add-ons, and the company it belongs to. The tracked commercial terms live on dim_account_terms.",
+      "name": "dim_account",
+      "primary_key": null,
+      "row_count": 541,
+      "supplement": null,
+      "unique": null
+    },
+    {
+      "calendar": null,
+      "columns": [
+        {
+          "description": "dim_account.account_id of the account these terms belong to.",
+          "enum_options": null,
+          "name": "account_id",
+          "references": null,
+          "type": "VARCHAR",
+          "unit": null
+        },
+        {
+          "description": "Per-seat price at creation, with an SCD-2 trail of the ~10% uplift each renewal renegotiation redraws.",
+          "enum_options": null,
+          "name": "seat_price",
+          "references": null,
+          "type": "BIGINT",
+          "unit": null
+        },
+        {
+          "description": "Percent of list this account pays for rated usage; 100 until an enterprise renewal negotiates it down.",
+          "enum_options": null,
+          "name": "pct_of_list_rate",
+          "references": null,
+          "type": "BIGINT",
+          "unit": null
+        },
+        {
+          "description": "Usage spend (USD) the account committed to for the review term that opened with this version; 0 means no commitment. Consecutive versions whose term_commit changed bound one term.",
+          "enum_options": null,
+          "name": "term_commit",
+          "references": null,
+          "type": "BIGINT",
+          "unit": "USD"
+        },
+        {
+          "description": "Negotiated included Core units per seat per month; NULL until an enterprise review sets it. Overrides dim_plan_terms.included_units_per_seat when present.",
+          "enum_options": null,
+          "name": "allowance_override",
+          "references": null,
+          "type": "BIGINT",
+          "unit": null
+        },
+        {
+          "description": "Instant this version of the row took effect.",
+          "enum_options": null,
+          "name": "valid_from",
+          "references": null,
+          "type": "TIMESTAMP",
+          "unit": null
+        },
+        {
+          "description": "dim_date.date_key of the day this version took effect.",
+          "enum_options": null,
+          "name": "valid_from_date_key",
+          "references": "dim_date",
+          "type": "INTEGER",
+          "unit": null
+        },
+        {
+          "description": "Instant this version was superseded; NULL on the current version.",
+          "enum_options": null,
+          "name": "valid_to",
+          "references": null,
+          "type": "TIMESTAMP",
+          "unit": null
+        },
+        {
+          "description": "dim_date.date_key of the day this version was superseded; NULL on the current version.",
+          "enum_options": null,
+          "name": "valid_to_date_key",
+          "references": "dim_date",
+          "type": "INTEGER",
+          "unit": null
+        }
+      ],
+      "description": "One row per version of an account's commercial terms — seat price, negotiated usage discount, committed spend, and allowance override — bounded by the interval each version was current for. Each version is an amendment made at a renewal review.",
+      "name": "dim_account_terms",
+      "primary_key": null,
+      "row_count": 13591,
+      "supplement": null,
+      "unique": null
+    },
+    {
+      "calendar": null,
+      "columns": [
+        {
+          "description": "Unique plan-terms identifier (PLN-##).",
+          "enum_options": null,
+          "name": "plan_terms_id",
+          "references": null,
+          "type": "VARCHAR",
+          "unit": null
+        },
+        {
+          "description": "The plan tier this row governs; joins to dim_account.plan.",
+          "enum_options": null,
+          "name": "tier",
+          "references": null,
+          "type": "VARCHAR",
+          "unit": null
+        },
+        {
+          "description": "Published per-seat monthly price for the tier, before any account's negotiated seat_price.",
+          "enum_options": null,
+          "name": "list_seat_price",
+          "references": null,
+          "type": "BIGINT",
+          "unit": "USD"
+        },
+        {
+          "description": "Core usage units included per billable seat per month; only volume above seats x this allowance is rated.",
+          "enum_options": null,
+          "name": "included_units_per_seat",
+          "references": null,
+          "type": "BIGINT",
+          "unit": null
+        },
+        {
+          "description": "Days after hub provisioning during which no usage on the account is rated.",
+          "enum_options": null,
+          "name": "trial_days",
+          "references": null,
+          "type": "BIGINT",
+          "unit": "days"
+        },
+        {
+          "description": "How long an issued credit can be applied before it expires unused.",
+          "enum_options": null,
+          "name": "credit_validity_days",
+          "references": null,
+          "type": "BIGINT",
+          "unit": "days"
+        }
+      ],
+      "description": "One row per plan tier's published commercial terms — list seat price, included Core units per seat per month, free-trial length, and credit validity. Joined from dim_account.plan.",
+      "name": "dim_plan_terms",
+      "primary_key": null,
+      "row_count": 3,
+      "supplement": null,
+      "unique": null
+    },
+    {
+      "calendar": null,
+      "columns": [
+        {
+          "description": "Unique SKU identifier (SKU-###).",
+          "enum_options": null,
+          "name": "sku_id",
+          "references": null,
+          "type": "VARCHAR",
+          "unit": null
+        },
+        {
+          "description": "SKU display name.",
+          "enum_options": null,
+          "name": "name",
+          "references": null,
+          "type": "VARCHAR",
+          "unit": null
+        },
+        {
+          "description": "How the SKU is charged — metered (rated per unit of usage volume through rate_tier) or flat (a fixed monthly fee, never selected by a usage session).",
+          "enum_options": null,
+          "name": "billing_model",
+          "references": null,
+          "type": "VARCHAR",
+          "unit": null
+        },
+        {
+          "description": "List price per unit of usage volume; the rate a metered SKU is billed at when it has no ladder rows (Workflow), and the base a custom_tier pct_of_list applies to.",
+          "enum_options": null,
+          "name": "standard_rate",
+          "references": null,
+          "type": "DOUBLE",
+          "unit": null
+        },
+        {
+          "description": "Monthly fee for a flat-billed SKU; absent on metered SKUs, where the charge comes from rate_tier instead.",
+          "enum_options": null,
+          "name": "flat_fee",
+          "references": null,
+          "type": "BIGINT",
+          "unit": "USD"
+        },
+        {
+          "description": "When the SKU entered the catalogue; Workflow launched mid-run and has no usage before this.",
+          "enum_options": null,
+          "name": "launched_at",
+          "references": null,
+          "type": "TIMESTAMP",
+          "unit": null
+        },
+        {
+          "description": "dim_date.date_key of the day the SKU entered the catalogue.",
+          "enum_options": null,
+          "name": "launched_date_key",
+          "references": "dim_date",
+          "type": "INTEGER",
+          "unit": null
+        }
+      ],
+      "description": "One row per product line in the catalogue — metered SKUs rated per unit of usage volume through the rate ladder, flat SKUs billed a fixed monthly fee.",
+      "name": "dim_sku",
+      "primary_key": null,
+      "row_count": 7,
+      "supplement": null,
+      "unique": null
+    },
+    {
+      "calendar": null,
+      "columns": [
+        {
+          "description": "Unique band identifier (RT-###).",
+          "enum_options": null,
+          "name": "rate_tier_id",
+          "references": null,
+          "type": "VARCHAR",
+          "unit": null
+        },
+        {
+          "description": "dim_sku.sku_id of the SKU this band prices.",
+          "enum_options": null,
+          "name": "sku_id",
+          "references": "dim_sku",
+          "type": "VARCHAR",
+          "unit": null
+        },
+        {
+          "description": "Position of the band within its SKU's ladder, from 1 upward.",
+          "enum_options": null,
+          "name": "ordinal",
+          "references": null,
+          "type": "BIGINT",
+          "unit": null
+        },
+        {
+          "description": "Inclusive lower bound of cumulative period volume this band applies to.",
+          "enum_options": null,
+          "name": "from_units",
+          "references": null,
+          "type": "BIGINT",
+          "unit": null
+        },
+        {
+          "description": "Inclusive upper bound of the band; NULL on the open-ended top band.",
+          "enum_options": null,
+          "name": "to_units",
+          "references": null,
+          "type": "BIGINT",
+          "unit": null
+        },
+        {
+          "description": "Price per unit (USD) inside this band, before the account's negotiated pct_of_list_rate.",
+          "enum_options": null,
+          "name": "rate",
+          "references": null,
+          "type": "DOUBLE",
+          "unit": "USD"
+        },
+        {
+          "description": "Instant this band came into force.",
+          "enum_options": null,
+          "name": "effective_from",
+          "references": null,
+          "type": "TIMESTAMP",
+          "unit": null
+        },
+        {
+          "description": "dim_date.date_key of the day this band came into force.",
+          "enum_options": null,
+          "name": "effective_from_date_key",
+          "references": "dim_date",
+          "type": "INTEGER",
+          "unit": null
+        },
+        {
+          "description": "Instant this band was withdrawn; NULL while still in force.",
+          "enum_options": null,
+          "name": "effective_to",
+          "references": null,
+          "type": "TIMESTAMP",
+          "unit": null
+        },
+        {
+          "description": "dim_date.date_key of the day this band was withdrawn; NULL while still in force.",
+          "enum_options": null,
+          "name": "effective_to_date_key",
+          "references": "dim_date",
+          "type": "INTEGER",
+          "unit": null
+        }
+      ],
+      "description": "One row per band of a metered SKU's graduated price ladder — cumulative monthly volume bounds and the per-unit rate inside the band. A repriced band is a new row with its own effective window, never an edit of the old one.",
+      "name": "dim_rate_tier",
+      "primary_key": null,
+      "row_count": 10,
+      "supplement": null,
+      "unique": null
+    },
+    {
+      "calendar": null,
+      "columns": [
+        {
+          "description": "Unique promotion identifier (PRM-###).",
+          "enum_options": null,
+          "name": "promotion_id",
+          "references": null,
+          "type": "VARCHAR",
+          "unit": null
+        },
+        {
+          "description": "dim_sku.sku_id of the SKU whose usage the promotion waives.",
+          "enum_options": null,
+          "name": "sku_id",
+          "references": "dim_sku",
+          "type": "VARCHAR",
+          "unit": null
+        },
+        {
+          "description": "Promotion display name.",
+          "enum_options": null,
+          "name": "name",
+          "references": null,
+          "type": "VARCHAR",
+          "unit": null
+        },
+        {
+          "description": "What the promotion grants; free_usage waives rating on the SKU between the record's creation and deactivation times.",
+          "enum_options": null,
+          "name": "kind",
+          "references": null,
+          "type": "VARCHAR",
+          "unit": null
+        },
+        {
+          "description": "Instant the promotion became active.",
+          "enum_options": null,
+          "name": "starts_at",
+          "references": null,
+          "type": "TIMESTAMP",
+          "unit": null
+        },
+        {
+          "description": "dim_date.date_key of the day the promotion became active.",
+          "enum_options": null,
+          "name": "starts_date_key",
+          "references": "dim_date",
+          "type": "INTEGER",
+          "unit": null
+        },
+        {
+          "description": "Instant the promotion ended; NULL if still active at the end of the extract.",
+          "enum_options": null,
+          "name": "ends_at",
+          "references": null,
+          "type": "TIMESTAMP",
+          "unit": null
+        },
+        {
+          "description": "dim_date.date_key of the day the promotion ended; NULL if still active at the end of the extract.",
+          "enum_options": null,
+          "name": "ends_date_key",
+          "references": "dim_date",
+          "type": "INTEGER",
+          "unit": null
+        }
+      ],
+      "description": "One row per dated campaign that waives rating on one SKU while active — the billing-side record of each spring push.",
+      "name": "dim_promotion",
+      "primary_key": null,
+      "row_count": 5,
+      "supplement": null,
+      "unique": null
+    },
+    {
+      "calendar": null,
+      "columns": [
+        {
+          "description": "Unique credit identifier (CRD-#####).",
+          "enum_options": null,
+          "name": "credit_id",
+          "references": null,
+          "type": "VARCHAR",
+          "unit": null
+        },
+        {
+          "description": "dim_company.company_id of the company the credit was issued to; reach its account through dim_account.company_id.",
+          "enum_options": null,
+          "name": "company_id",
+          "references": "dim_company",
+          "type": "VARCHAR",
+          "unit": null
+        },
+        {
+          "description": "Face value of the credit (USD) at issue.",
+          "enum_options": null,
+          "name": "amount",
+          "references": null,
+          "type": "BIGINT",
+          "unit": "USD"
+        },
+        {
+          "description": "Why the credit was issued — goodwill, sla_breach, or billing_error.",
+          "enum_options": [
+            {
+              "description": null,
+              "value": "goodwill"
+            },
+            {
+              "description": null,
+              "value": "sla_breach"
+            },
+            {
+              "description": null,
+              "value": "billing_error"
+            }
+          ],
+          "name": "reason",
+          "references": null,
+          "type": "VARCHAR",
+          "unit": null
+        },
+        {
+          "description": "When the credit was issued; it expires issued_at + dim_plan_terms.credit_validity_days later.",
+          "enum_options": null,
+          "name": "issued_at",
+          "references": null,
+          "type": "TIMESTAMP",
+          "unit": null
+        },
+        {
+          "description": "dim_date.date_key of the issue day; the credit enters the ledger in that month.",
+          "enum_options": null,
+          "name": "issued_date_key",
+          "references": "dim_date",
+          "type": "INTEGER",
+          "unit": null
+        }
+      ],
+      "description": "One row per one-time credit issued to a company after a renewal review — face value and reason. Whether and when it is consumed against invoices is derived by the billing query, never stored.",
+      "name": "fact_credit",
+      "primary_key": null,
+      "row_count": 447,
+      "supplement": null,
+      "unique": null
+    },
+    {
+      "calendar": null,
+      "columns": [
+        {
+          "description": "Unique user identifier (USR-######).",
+          "enum_options": null,
+          "name": "user_id",
+          "references": null,
+          "type": "VARCHAR",
+          "unit": null
+        },
+        {
+          "description": "dim_account.account_id of the account this user's seat belongs to.",
+          "enum_options": null,
+          "name": "account_id",
+          "references": "dim_account",
+          "type": "VARCHAR",
+          "unit": null
+        },
+        {
+          "description": "User's given name.",
+          "enum_options": null,
+          "name": "first_name",
+          "references": null,
+          "type": "VARCHAR",
+          "unit": null
+        },
+        {
+          "description": "User's family name.",
+          "enum_options": null,
+          "name": "last_name",
+          "references": null,
+          "type": "VARCHAR",
+          "unit": null
+        },
+        {
+          "description": "User's work email address on their company's domain, following the company's email convention.",
+          "enum_options": null,
+          "name": "email",
+          "references": null,
+          "type": "VARCHAR",
+          "unit": null
+        },
+        {
+          "description": "User's job title as recorded on the seat.",
+          "enum_options": null,
+          "name": "job_title",
+          "references": null,
+          "type": "VARCHAR",
+          "unit": null
+        },
+        {
+          "description": "User's direct work phone number.",
+          "enum_options": null,
+          "name": "phone",
+          "references": null,
+          "type": "VARCHAR",
+          "unit": null
+        },
+        {
+          "description": "When the user's seat was created.",
+          "enum_options": null,
+          "name": "created_at",
+          "references": null,
+          "type": "TIMESTAMP",
+          "unit": null
+        },
+        {
+          "description": "dim_date.date_key of the day the user's seat was created.",
+          "enum_options": null,
+          "name": "created_date_key",
+          "references": "dim_date",
+          "type": "INTEGER",
+          "unit": null
+        }
+      ],
+      "description": "One row per seat holder, an individual working inside a subscribing company's account.",
+      "name": "dim_user",
+      "primary_key": null,
+      "row_count": 9858,
+      "supplement": null,
+      "unique": null
+    },
+    {
+      "calendar": null,
+      "columns": [
+        {
+          "description": "Unique user identifier (USR-######).",
+          "enum_options": null,
+          "name": "user_id",
+          "references": null,
+          "type": "VARCHAR",
+          "unit": null
+        },
+        {
+          "description": "Seat lifecycle status: provisioned / active / using / offboarded.",
+          "enum_options": null,
+          "name": "status",
+          "references": null,
+          "type": "VARCHAR",
+          "unit": null
+        },
+        {
+          "description": "Date this version of the row took effect.",
+          "enum_options": null,
+          "name": "valid_from",
+          "references": null,
+          "type": "DATE",
+          "unit": null
+        },
+        {
+          "description": "dim_date.date_key of the day this version took effect.",
+          "enum_options": null,
+          "name": "valid_from_date_key",
+          "references": "dim_date",
+          "type": "INTEGER",
+          "unit": null
+        },
+        {
+          "description": "Date this version was superseded; NULL on the current version.",
+          "enum_options": null,
+          "name": "valid_to",
+          "references": null,
+          "type": "DATE",
+          "unit": null
+        },
+        {
+          "description": "dim_date.date_key of the day this version was superseded; NULL on the current version.",
+          "enum_options": null,
+          "name": "valid_to_date_key",
+          "references": "dim_date",
+          "type": "INTEGER",
+          "unit": null
+        }
+      ],
+      "description": "One row per seat's status interval, tracking a user's lifecycle from provisioned through active/using to offboarded; billable seat-days are the active/using intervals.",
+      "name": "dim_user_status",
+      "primary_key": null,
+      "row_count": 24599,
+      "supplement": null,
+      "unique": null
+    },
+    {
+      "calendar": null,
+      "columns": [
+        {
+          "description": "Sequential event id (0-based), ascending in event order.",
+          "enum_options": null,
+          "name": "usage_event_id",
+          "references": null,
+          "type": "BIGINT",
+          "unit": null
+        },
+        {
+          "description": "When the usage session occurred.",
+          "enum_options": null,
+          "name": "occurred_at",
+          "references": null,
+          "type": "TIMESTAMP",
+          "unit": null
+        },
+        {
+          "description": "dim_date.date_key of the session's day; usage is billed in that month.",
+          "enum_options": null,
+          "name": "occurred_date_key",
+          "references": "dim_date",
+          "type": "INTEGER",
+          "unit": null
+        },
+        {
+          "description": "dim_user.user_id of the user who ran the session.",
+          "enum_options": null,
+          "name": "user_id",
+          "references": "dim_user",
+          "type": "VARCHAR",
+          "unit": null
+        },
+        {
+          "description": "dim_sku.sku_id of the product line the session was recorded against.",
+          "enum_options": null,
+          "name": "sku_id",
+          "references": "dim_sku",
+          "type": "VARCHAR",
+          "unit": null
+        },
+        {
+          "description": "JSON detail of the usage session; its `volume` leaf is the metered quantity in the SKU's units, rounded to 2dp.",
+          "enum_options": null,
+          "name": "context",
+          "references": null,
+          "type": "VARCHAR",
+          "unit": null
+        }
+      ],
+      "description": "One row per product usage session — the volume a seat holder ran, attributed to the SKU the session bound.",
+      "name": "fact_usage_event",
+      "primary_key": null,
+      "row_count": 588840,
+      "supplement": null,
+      "unique": null
+    },
+    {
+      "calendar": null,
+      "columns": [
+        {
+          "description": "Id of the lifecycle this interval belongs to; rows sharing an id form one company or user lifecycle timeline.",
+          "enum_options": null,
+          "name": "lifecycle_id",
+          "references": null,
+          "type": "VARCHAR",
+          "unit": null
+        },
+        {
+          "description": "Which lifecycle this is: company_lifecycle or user_lifecycle.",
+          "enum_options": [
+            {
+              "description": "The account lifecycle — a company onboards onto a freshly provisioned hub, then enters a repeating renewal review that each quarter either renegotiates its commercial terms or ends the subscription, marking the hub so its seats offboard in turn.",
+              "value": "company_lifecycle"
+            },
+            {
+              "description": "The seat lifecycle — a user is provisioned against its company's hub, then cycles week by week between using the product and letting the cycle pass, until the account churns and the seat is given up.",
+              "value": "user_lifecycle"
+            }
+          ],
+          "name": "lifecycle_type",
+          "references": null,
+          "type": "VARCHAR",
+          "unit": null
+        },
+        {
+          "description": "dim_company.company_id for company_lifecycle rows; NULL on user_lifecycle rows.",
+          "enum_options": null,
+          "name": "company_id",
+          "references": "dim_company",
+          "type": "VARCHAR",
+          "unit": null
+        },
+        {
+          "description": "dim_user.user_id for user_lifecycle rows; NULL on company_lifecycle rows.",
+          "enum_options": null,
+          "name": "user_id",
+          "references": "dim_user",
+          "type": "VARCHAR",
+          "unit": null
+        },
+        {
+          "description": "Lifecycle state occupied during this interval.",
+          "enum_options": null,
+          "name": "state",
+          "references": null,
+          "type": "VARCHAR",
+          "unit": null
+        },
+        {
+          "description": "When the lifecycle entered this state.",
+          "enum_options": null,
+          "name": "started_at",
+          "references": null,
+          "type": "TIMESTAMP",
+          "unit": null
+        },
+        {
+          "description": "When the lifecycle left this state; NULL if it was still in this state at the end of the extract.",
+          "enum_options": null,
+          "name": "ended_at",
+          "references": null,
+          "type": "TIMESTAMP",
+          "unit": null
+        },
+        {
+          "description": "dim_date.date_key of the day the state was entered.",
+          "enum_options": null,
+          "name": "started_date_key",
+          "references": "dim_date",
+          "type": "INTEGER",
+          "unit": null
+        },
+        {
+          "description": "dim_date.date_key of the day the state was left; NULL while still occupied.",
+          "enum_options": null,
+          "name": "ended_date_key",
+          "references": "dim_date",
+          "type": "INTEGER",
+          "unit": null
+        }
+      ],
+      "description": "One row per state interval occupied by a company or user lifecycle.",
+      "name": "fact_lifecycle_interval",
+      "primary_key": null,
+      "row_count": 1210022,
+      "supplement": null,
+      "unique": null
+    },
+    {
+      "calendar": {
+        "from": "2025-12-01",
+        "to": "2031-12-31"
+      },
+      "columns": [
+        {
+          "description": "`year * 10000 + month * 100 + day` — the `yyyymmdd` smart key; the table's row identity and sort order",
+          "enum_options": null,
+          "name": "date_key",
+          "references": null,
+          "type": "INTEGER",
+          "unit": null
+        },
+        {
+          "description": "The calendar date",
+          "enum_options": null,
+          "name": "date",
+          "references": null,
+          "type": "DATE",
+          "unit": null
+        },
+        {
+          "description": "Calendar year",
+          "enum_options": null,
+          "name": "year",
+          "references": null,
+          "type": "INTEGER",
+          "unit": null
+        },
+        {
+          "description": "1–4",
+          "enum_options": null,
+          "name": "quarter",
+          "references": null,
+          "type": "INTEGER",
+          "unit": null
+        },
+        {
+          "description": "1–12",
+          "enum_options": null,
+          "name": "month",
+          "references": null,
+          "type": "INTEGER",
+          "unit": null
+        },
+        {
+          "description": "Day of month, 1–31",
+          "enum_options": null,
+          "name": "day",
+          "references": null,
+          "type": "INTEGER",
+          "unit": null
+        },
+        {
+          "description": "ISO weekday, 1 = Monday … 7 = Sunday",
+          "enum_options": null,
+          "name": "day_of_week",
+          "references": null,
+          "type": "INTEGER",
+          "unit": null
+        },
+        {
+          "description": "1–366",
+          "enum_options": null,
+          "name": "day_of_year",
+          "references": null,
+          "type": "INTEGER",
+          "unit": null
+        },
+        {
+          "description": "ISO-8601 week-numbering year (differs from `year` around the new year)",
+          "enum_options": null,
+          "name": "iso_year",
+          "references": null,
+          "type": "INTEGER",
+          "unit": null
+        },
+        {
+          "description": "ISO-8601 week number, 1–53, within `iso_year`",
+          "enum_options": null,
+          "name": "iso_week",
+          "references": null,
+          "type": "INTEGER",
+          "unit": null
+        },
+        {
+          "description": "English month name (`January` … `December`)",
+          "enum_options": null,
+          "name": "month_name",
+          "references": null,
+          "type": "VARCHAR",
+          "unit": null
+        },
+        {
+          "description": "English weekday name (`Monday` … `Sunday`)",
+          "enum_options": null,
+          "name": "day_name",
+          "references": null,
+          "type": "VARCHAR",
+          "unit": null
+        },
+        {
+          "description": "`day_of_week >= 6`",
+          "enum_options": null,
+          "name": "is_weekend",
+          "references": null,
+          "type": "BOOLEAN",
+          "unit": null
+        }
+      ],
+      "description": "A forge-generated calendar over the declared range, one row per day, keyed by `yyyymmdd`.",
+      "name": "dim_date",
+      "primary_key": null,
+      "row_count": 2222,
+      "supplement": null,
+      "unique": null
+    },
+    {
+      "calendar": null,
+      "columns": [
+        {
+          "description": "dim_account.account_id the ladder belongs to (ACC-#####); not checked against the warehouse.",
+          "enum_options": null,
+          "name": "account_id",
+          "references": null,
+          "type": "VARCHAR",
+          "unit": null
+        },
+        {
+          "description": "dim_sku.sku_id the ladder prices (SKU-###); not checked against the warehouse.",
+          "enum_options": null,
+          "name": "sku_id",
+          "references": null,
+          "type": "VARCHAR",
+          "unit": null
+        },
+        {
+          "description": "Position of the band within its ladder, from 1 upward; restarts at 1 in each effective window.",
+          "enum_options": null,
+          "name": "ordinal",
+          "references": null,
+          "type": "BIGINT",
+          "unit": null
+        },
+        {
+          "description": "Inclusive lower bound of cumulative monthly volume the band applies to.",
+          "enum_options": null,
+          "name": "from_units",
+          "references": null,
+          "type": "BIGINT",
+          "unit": null
+        },
+        {
+          "description": "Inclusive upper bound of the band; empty on the open-ended top band.",
+          "enum_options": null,
+          "name": "to_units",
+          "references": null,
+          "type": "BIGINT",
+          "unit": null
+        },
+        {
+          "description": "Negotiated price per unit (USD) inside the band; empty when the row is priced as pct_of_list instead.",
+          "enum_options": null,
+          "name": "rate",
+          "references": null,
+          "type": "DECIMAL(6,4)",
+          "unit": null
+        },
+        {
+          "description": "Percent of dim_sku.standard_rate charged inside the band, replacing the account's pct_of_list_rate; empty when the row carries a rate.",
+          "enum_options": null,
+          "name": "pct_of_list",
+          "references": null,
+          "type": "BIGINT",
+          "unit": null
+        },
+        {
+          "description": "First day the ladder applies, one of the account's renewal-review dates.",
+          "enum_options": null,
+          "name": "effective_from",
+          "references": null,
+          "type": "DATE",
+          "unit": null
+        },
+        {
+          "description": "Last day the ladder applies (inclusive); empty while still in force.",
+          "enum_options": null,
+          "name": "effective_to",
+          "references": null,
+          "type": "DATE",
+          "unit": null
+        }
+      ],
+      "description": "Negotiated per-account price ladders for the largest enterprise accounts, maintained by account management outside the product. Rows here override dim_rate_tier for that account and SKU while effective; forge carries them verbatim and enforces no reference.",
+      "name": "custom_tier",
+      "primary_key": null,
+      "row_count": 28,
+      "supplement": {
+        "file": "custom_tier.csv",
+        "sha256": "a254631cce32867dad81d0863f00f111dc9e79340823bee659bca18bf9f67981"
+      },
+      "unique": null
+    }
+  ]
+}

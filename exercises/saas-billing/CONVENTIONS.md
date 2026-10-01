@@ -43,16 +43,29 @@ the order rows happen to be summed in, or on how a query is restructured.
 ## Time
 
 - **The month spine is the warehouse calendar.** `dim_date` (one row per day,
-  2026-01-01 to 2030-12-31) grouped by `year, month` gives every billing
+  2025-12-01 to 2031-12-31) grouped by `year, month` gives every billing
   month's `month_start`, `next_month_start`, and `days_in_month` (its row
-  count). Nothing is generated in the query.
+  count). Nothing is generated in the query. The calendar runs past the data
+  at both ends (December 2025 and all of 2031 have no billing activity), so
+  the spine is not the whole calendar: it is bounded by each account's
+  billing span (provisioning month through churn month or the end of the
+  extract, as above), and no other month appears in the output.
 - **An instant belongs to the month of its `*_date_key`** (`dim_account.
   created_date_key`, `fact_usage_event.occurred_date_key`, `fact_credit.
   issued_date_key`, `fact_lifecycle_interval.started_date_key`) looked up on
   `dim_date.date_key`; a `DATE` column (`dim_company.valid_from`) is looked
   up on `dim_date.date`. The key is the local date of the same instant the
   timestamp column renders, so `date_trunc('month', <timestamp>)` agrees
-  with it — a candidate may use either.
+  with it — a candidate may use either. The versioned and windowed dims also
+  carry keys for their bounds (`dim_company.valid_from_date_key` /
+  `valid_to_date_key`, likewise on `dim_account_terms` and `dim_user_status`;
+  `dim_rate_tier.effective_from_date_key` / `effective_to_date_key`;
+  `dim_promotion.starts_date_key` / `ends_date_key`; `dim_sku.
+  launched_date_key`; `dim_user.created_date_key`). The reference does not
+  use them, but they key to the same day as the column they shadow
+  (`valid_to_date_key` is NULL on the current version). Several dims share
+  the names `created_date_key`, `valid_from_date_key` and `valid_to_date_key`,
+  so qualify them and avoid `USING` / `NATURAL JOIN` between those dims.
 - **Month end instant** `T` = the last instant of the month. An SCD-2 version
   is "as of month end" when `valid_from < next_month_start AND (valid_to IS
   NULL OR valid_to >= next_month_start)`. The same rule reads `dim_rate_tier`

@@ -25,7 +25,7 @@ this repo and fetched by a one-line setup script. Saas-billing contains a data w
 fictional SaaS company. The data should look realistic enough and the billing process is quite 
 complex. See [datasets/saas-billing/README.md](datasets/saas-billing/README.md) for details. 
 
-Download the [DuckDB](https://github.com/leogodin217/fabulexa_complex_queries/releases/download/saas-billing-v1/saas-billing.duckdb) file from releases or use one of the setup scripts in [datasets/saas-billing/]. 
+Download the [DuckDB](https://github.com/leogodin217/fabulexa_complex_queries/releases/download/saas-billing-v2/saas-billing.duckdb) file from releases or use one of the setup scripts in [datasets/saas-billing/]. 
 
 
 ## Exercises
@@ -72,7 +72,7 @@ In short, this isn't a product. It is a resource with an ecosystem of resources 
 ## Quick start
 
 ```bash
-datasets/saas-billing/setup.sh                       # downloads warehouse.duckdb (~75 MB) and verifies it
+datasets/saas-billing/setup.sh                       # downloads warehouse.duckdb (~76 MB) and verifies it
 scripts/run.sh   saas-billing exercises/saas-billing/beginner/inherited.sql
 scripts/check.sh saas-billing beginner exercises/saas-billing/beginner/my_query.sql  # EQUAL / DIFFERENT, exit 0 only on EQUAL
 ```
