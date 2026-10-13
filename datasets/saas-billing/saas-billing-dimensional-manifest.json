@@ -157,7 +157,8 @@
           "description": "One row per subscribing company, the account holder whose lifecycle runs from onboarding through repeated renewal reviews to churn.",
           "key": [
             "company_id",
-            "valid_from"
+            "valid_from",
+            "status"
           ],
           "name": "dim_company",
           "role": "dim",
@@ -1464,7 +1465,8 @@
           "description": "One row per seat's status interval, tracking a user's lifecycle from provisioned through active/using to offboarded; billable seat-days are the active/using intervals.",
           "key": [
             "user_id",
-            "valid_from"
+            "valid_from",
+            "status"
           ],
           "name": "dim_user_status",
           "role": "dim",

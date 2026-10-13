@@ -4,9 +4,9 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
-TAG=saas-billing-v2
+TAG=saas-billing-v3
 ASSET=saas-billing.duckdb
-SHA256=7a0beaaf043961fe7cfc43599741847417d5d799ed4bd5c212e9d087bf395c0b
+SHA256=f162d1b44b650d5095d51c7c2406ed104effeb561cd9f8fb08fa7159a1b84d0b
 URL="https://github.com/leogodin217/fabulexa_complex_queries/releases/download/$TAG/$ASSET"
 OUT=warehouse.duckdb
 
