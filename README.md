@@ -48,15 +48,20 @@ To use the grader scripts, you'll need [DuckDB CLI](https://duckdb.org/docs/inst
 of memory on the advanced tier). Feel free to roll your own solution. Maybe create views out of 
 the queries and create your own comparison query. It's your learning journey, own it! 
 
-Each exercise track pairs a clean **reference** query with an **inherited** one 
-— the same result after years of maintenance — and a grader that says exactly 
-where a candidate differs from the reference.
+There are two kinds of track. The **saas-billing** track pairs a clean
+**reference** query with an **inherited** one — the same result after years
+of maintenance — and your job is to understand and refactor the ugly one.
+The **nhs** track is the mirror image: one good ~1,000-line reference query
+(a monthly trust performance pack) plus ten maintenance tickets — six
+planted silent bugs to find and four change requests to land — with a
+set-diff grader that compares any two packs row for row.
 
 ```
 datasets/<name>/      README.md (data dictionary + spec) · setup.sh / setup.bat · PROVENANCE.md
-exercises/<name>/     README.md · CONVENTIONS.md · <tier>/reference.sql · <tier>/inherited.sql
-exercises/<name>/personas/   manager.md · finance.md · data-engineer.md · examples.md (ask-a-colleague prompts)
-scripts/              run.sh / run.bat · check.sh / check.bat (+ check.sql, the grader)
+exercises/saas-billing/      README.md · CONVENTIONS.md · <tier>/reference.sql · <tier>/inherited.sql
+exercises/saas-billing/personas/   manager.md · finance.md · data-engineer.md · examples.md (ask-a-colleague prompts)
+exercises/nhs/        README.md · spec.md · reference/performance_pack.sql · check.sql · NN-*/ (ticket.md + query.sql + solution)
+scripts/              run.sh / run.bat · check.sh / check.bat (tier grader) · check-pack.sh / check-pack.bat (pack grader)
 ```
 
 ### But Wait, There's More!
@@ -84,6 +89,7 @@ Windows: `setup.bat`, `run.bat`, `check.bat` — same arguments use \ instead of
 | Name | What it is | Tracks |
 |---|---|---|
 | [`saas-billing`](datasets/saas-billing/README.md) | A B2B SaaS vendor's billing warehouse over five years — accounts, seats, a metered usage firehose, tier ladders, promotions, commits and credits; the facts of a monthly invoice, never the invoice itself | [billing query exercises](exercises/saas-billing/README.md), three tiers |
+| [`nhs`](datasets/nhs/README.md) | An acute NHS hospital trust over three years — A&E, inpatient wards, outpatient clinics, diagnostics, cancer and surgical pathways, with an SCD-2 patient dimension and a calibrated NHS metric catalog (4-hour standard, cancer waits, DM01, readmissions, occupancy, tariff income, IMD inequality gradients) | [performance-pack maintenance exercises](exercises/nhs/README.md), 10 tickets |
 
 Warehouses are produced by [fabulexa-forge](https://github.com/leogodin217/fabulexa_forge)
 from simulated base-layer emits; each dataset's `PROVENANCE.md` records the
