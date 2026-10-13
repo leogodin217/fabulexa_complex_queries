@@ -13,7 +13,7 @@ this repo so learners need no Python to obtain it.
 | Warehouse sha256 | `244439543ba97c2e435c61648d17217a5df7f02344912e8b780deedcb63274aa` |
 | Companion README sha256 | `7f932476b97fd7f529c35ecc34ce949edb69532608e07c63232114b9a471fbdf` (50,310 bytes) |
 | Companion manifest sha256 | `edeaa781561526a6097b35f71d86d7b476f477f7c614011f6710864a2f737026` (209,771 bytes) |
-| Release asset | `nhs-v1` / `nhs.duckdb` — **not yet published**; upload `warehouse.duckdb` under that name when the track ships (setup scripts already carry this tag and sha256) |
+| Release asset | `nhs-v1` / `nhs.duckdb` (19,148,800 bytes; sha256 above, verified after upload and by a clean `setup.sh` round-trip) |
 
 Unlike saas-billing, this export was not taken from a published forge datasets
 pack: forge's nhs config at `183ae2f` is deliberately ahead of the published
