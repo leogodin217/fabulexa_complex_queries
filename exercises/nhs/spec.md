@@ -21,7 +21,7 @@ Set-diff verification depends on this: a candidate that drops empty rows is
 |---|---|---|
 | `month` | `DATE` | first day of the calendar month |
 | `specialty` | `VARCHAR` | the family's specialty surface (below); `trust` where the family reports trust-level; `unattributed` where attribution is defined but no allocation covers the anchor instant |
-| `metric` | `VARCHAR` | one of the 16 metric keys below |
+| `metric` | `VARCHAR` | one of the 18 metric keys below |
 | `numerator` | `DECIMAL(18,4)` | metric-specific (count, bed-days, £) |
 | `denominator` | `DECIMAL(18,4)` | metric-specific |
 | `value` | `DECIMAL(14,2)` | the headline figure; `NULL` when `denominator` is 0 |
@@ -34,7 +34,7 @@ implicitly; `DOUBLE` source columns (`tariff`, `cost_per_bed_day`, the
 part of the contract (the reference still `ORDER BY month, metric, specialty`
 for readability).
 
-Row inventory: 36 months × 64 (metric, specialty) pairs = **2,304 rows**.
+Row inventory: 36 months × 66 (metric, specialty) pairs = **2,376 rows**.
 
 ## Time
 
@@ -70,7 +70,7 @@ family:
 |---|---|---|
 | A&E 4-hour | allocation at the attendance's `arrived` instant | `110,180,300,301,320,340` + `unattributed` |
 | Readmission, mortality, DTOC | allocation at the spell's `admission_triage` instant | same 7 |
-| Cancer FDS | `trust` — consultants are allocated at first contact, so no allocation exists at the referral instant that anchors the denominator | `trust` |
+| Cancer 2WW / FDS / 62-day | `trust` — consultants are allocated at first contact, so no allocation exists at the referral instant that anchors the denominator | `trust` |
 | DM01 | `trust` — 8 of 12 catalogue tests are cross-specialty (blank `main_specialty`) | `trust` |
 | FFT | `trust` | `trust` |
 | Bed occupancy, bed-day cost | native `dim_ward.main_specialty` | `110,300,301,320,340` |
@@ -100,6 +100,20 @@ the named instant.
    but the rule is pinned) stays in the denominator as a breach. The 4-hour
    clock's end for admitted patients is the `admitted` **state entry**
    (decision-to-admit), not the `ward_assignment` milestone.
+2a. **`cancer_2ww_first_seen_pct`** — no pinned target (the catalog names
+   the 336-hour clock but pins no target; the FDS replaced the 2WW
+   operational standard). Numerator = pathways with a `cancer_first_seen`
+   milestone at `hours_from_referral <= 336`; denominator = referrals in
+   the month. Cutoff: `cancer_referral occurred_at <= extract_end − 336
+   hours`.
+
+2b. **`cancer_62day_treatment_pct`** — no pinned target. 1488-hour clock;
+   the milestone surface carries no treatment-start row, so the clock's
+   end is the pathway's `treatment_started` **state entry** in
+   `fact_pathway_state` (the one cancer endpoint read from the state
+   timeline — documented in the reference header). Cutoff:
+   `cancer_referral occurred_at <= extract_end − 1488 hours`.
+
 2. **`cancer_fds_28day_pct`** — target **75.00** (the Faster Diagnosis
    Standard; it rises to 80% from March 2026). Per cancer pathway
    (`fact_cancer_pathway`): numerator = pathways with a
@@ -185,7 +199,7 @@ the named instant.
 | 4-hour clock end for admitted patients | the `admitted` state entry |
 | Census instant | day-overlap (bed-days), not midnight head-count |
 | Winter | not surfaced in the pack (month grain only) |
-| Edge censoring | stated cutoffs: FDS 672 h, DM01 1008 h, readmission 30 days before extract end; A&E and all others uncensored |
+| Edge censoring | stated cutoffs: 2WW 336 h, FDS 672 h, 62-day 1488 h, DM01 1008 h, readmission 30 days before extract end; A&E and all others uncensored |
 
 ## Verification
 
