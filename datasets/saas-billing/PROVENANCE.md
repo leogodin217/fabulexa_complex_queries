@@ -7,14 +7,14 @@ asset of this repo so learners need no Python to obtain it.
 
 | Field | Value |
 |---|---|
-| Source pack | `saas-billing.tar.gz` from forge release `datasets-v5` |
-| Source pack sha256 | `2fcf823532a1e2c3efaec930e50beacedbd27c433aaabd571d25e7e861feeb79` (41,088,144 bytes) |
-| Producer | fabulexa-forge 0.0.1 @ `968b048` |
+| Source pack | `saas-billing.tar.gz` from forge release `datasets-v7` |
+| Source pack sha256 | `c0d52636db236af3acc6f3b14bab9085728ee88265bd05e31c687d87490d1926` (41,088,922 bytes) |
+| Producer | fabulexa-forge 0.0.1 @ `11a9791` |
 | Emit | `base_format_version` 12, `emit.sidecar_sha256` `f0afa455bd6d5b0ab1d65bed443d3a950ba7ff273e16efe4c6595437bad8ebf8` |
 | Command | `fabulexa-forge export ./bundle ./dimensional.yaml saas-billing.duckdb --fmt duckdb` (run in the extracted pack) |
-| Warehouse sha256 | `7a0beaaf043961fe7cfc43599741847417d5d799ed4bd5c212e9d087bf395c0b` |
+| Warehouse sha256 | `f162d1b44b650d5095d51c7c2406ed104effeb561cd9f8fb08fa7159a1b84d0b` |
 | Warehouse size | 76,034,048 bytes |
-| Release asset | `saas-billing-v2` / `saas-billing.duckdb` |
+| Release asset | `saas-billing-v3` / `saas-billing.duckdb` |
 
 Two companion files forge wrote with the export sit beside this file, copied
 verbatim:
