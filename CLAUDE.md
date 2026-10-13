@@ -4,8 +4,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this repo is
 
-SQL teaching exercises: for each dataset and tier, a clean `reference.sql` and an
-`inherited.sql` (the same result after years of "maintenance"), plus an exact grader.
+SQL teaching exercises in two track shapes. The **tier track** (saas-billing): for each
+tier, a clean `reference.sql` and an `inherited.sql` (the same result after years of
+"maintenance"), plus an exact grader. The **pack track** (nhs): one clean ~1,000-line
+reference query (`exercises/nhs/reference/performance_pack.sql`) and ten maintenance
+exercises — six variants with a single planted silent bug each, four change requests —
+graded by set-diff against the reference or the exercise's own `solution.sql`.
 There is no application code, build step, or test framework. The only runtime is the
 DuckDB CLI (`duckdb` on PATH, **1.3 or newer** — older releases are an order of magnitude
 slower and can OOM on the advanced tier; check with `duckdb --version` before blaming a
@@ -15,16 +19,20 @@ the setup script (sha256-verified against a GitHub release asset).
 ## Commands (run from the repo root)
 
 ```bash
-datasets/saas-billing/setup.sh                                   # fetch + verify warehouse (idempotent)
-scripts/run.sh   saas-billing <query.sql>                        # run a query, table to stdout
-scripts/run.sh   saas-billing <query.sql> out.csv                # ...or CSV to a file
-scripts/check.sh saas-billing <tier> <candidate.sql>             # grade: prints EQUAL / DIFFERENT, exit 0 only on EQUAL
+datasets/<name>/setup.sh                                         # fetch + verify warehouse (idempotent)
+scripts/run.sh   <name> <query.sql>                              # run a query, table to stdout
+scripts/run.sh   <name> <query.sql> out.csv                      # ...or CSV to a file
+scripts/check.sh saas-billing <tier> <candidate.sql>             # tier grader: EQUAL / DIFFERENT, exit 0 only on EQUAL
+scripts/check-pack.sh nhs <expected.sql> <candidate.sql>         # pack grader: same verdict, any two bare SELECTs
 ```
 
-`<tier>` is `beginner`, `intermediate`, or `advanced`. Sanity-check the track itself with
-`scripts/check.sh saas-billing <tier> exercises/saas-billing/<tier>/inherited.sql` — every
-inherited query must be `EQUAL` to its reference. `.bat` twins of each script exist for
-Windows and take the same arguments; keep them in sync when changing a `.sh`.
+`<tier>` is `beginner`, `intermediate`, or `advanced`. Sanity-check the saas track with
+`scripts/check.sh saas-billing <tier> exercises/saas-billing/<tier>/inherited.sql` (every
+inherited query must be `EQUAL`), and the nhs track per each exercise's `ticket.md`
+acceptance line: the six bug exercises must be `DIFFERENT` against the reference as
+shipped (they carry the planted bug) and `EQUAL` once fixed; `03/06/08/10`'s
+`solution.sql` must be `EQUAL` to its ticket's expected side. `.bat` twins of each script
+exist for Windows and take the same arguments; keep them in sync when changing a `.sh`.
 
 ## How grading works
 
@@ -32,7 +40,10 @@ Windows and take the same arguments; keep them in sync when changing a `.sh`.
 `create temp table expected/actual as <query>;` and pipes that plus `scripts/check.sql`
 into `duckdb -readonly`. `check.sql` compares column name/type/position (via `describe`)
 and then the multiset of rows (`EXCEPT ALL` both ways on each row cast to varchar), and
-prints up to 20 differing rows. Consequences:
+prints up to 20 differing rows. `scripts/check-pack.sh` is the same idea for the nhs
+track: it wraps two files as temp views and diffs them with the `pack_diff` table macro
+(`exercises/nhs/check.sql`, `EXCEPT ALL` over `query_table()`, rows tagged
+missing/unexpected). Consequences:
 
 - Query files must be a single bare `SELECT` (no trailing semicolon, no `.mode` dot
   commands, no DDL) — they are spliced into a `CREATE TABLE AS`.
@@ -52,6 +63,24 @@ prints up to 20 differing rows. Consequences:
   (`SHA256`, `TAG`) and here.
 
 ## Structure of the exercise queries
+
+### nhs (pack track)
+
+- The reference is one `WITH` chain in strict layers (base extracts → conforming →
+  one CTE family per metric → dense spine assembly → single-rounding presentation),
+  18 metric keys, one row per month × specialty × metric (2,376 rows, unique key).
+  `exercises/nhs/spec.md` pins every ambiguity; the generated
+  `datasets/nhs/README.md` is the authoritative metric catalog — change neither
+  lightly, and never the dataset README (vendored verbatim).
+- Each `NN-*/query.sql` is the full reference with at most one surgical difference.
+  Bug variants must stay *silent*: same columns, same dense row inventory, values
+  only. The header contract in each variant still states the correct rule — the
+  contradiction between contract and code is the exercise. Don't "fix" a planted
+  bug or its misleading comment outside that exercise's solution flow.
+- Solutions are openly readable by design (`solution.md` for bugs, `solution.sql`
+  for change requests).
+
+### saas-billing (tier track)
 
 - Tiers are prefixes of one pipeline: the beginner and intermediate references are
   literally the advanced reference (`with recursive` chain: `calendar` → `account` →
