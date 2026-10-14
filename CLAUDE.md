@@ -57,7 +57,7 @@ missing/unexpected). Consequences:
 ## Where the truth lives
 
 - `exercises/<dataset>/CONVENTIONS.md` — the pinned side of every billing ambiguity (as-of
-  rules, rounding, month spine, stage definitions). The reference implements this exactly;
+  rules, rounding, month grid, stage definitions). The reference implements this exactly;
   any change to a reference query must be reflected here and vice versa.
 - `datasets/<dataset>/README.md` and `<dataset>-dimensional-manifest.json` — data
   dictionary, business spec and machine-readable manifest (column `references`), written
@@ -71,7 +71,7 @@ missing/unexpected). Consequences:
 ### nhs (pack track)
 
 - The reference is one `WITH` chain in strict layers (base extracts → conforming →
-  one CTE family per metric → dense spine assembly → single-rounding presentation),
+  one CTE family per metric → dense grid assembly → single-rounding presentation),
   18 metric keys, one row per month × specialty × metric (2,376 rows, unique key).
   `exercises/nhs/spec.md` pins every ambiguity; the generated
   `datasets/nhs/README.md` is the authoritative metric catalog — change neither
@@ -92,9 +92,9 @@ missing/unexpected). Consequences:
   `commit_*` → `credit` / `ledger` → final select) cut short, so a column shared across
   tiers must carry the same value for the same company-month. Fix a bug in one tier's
   reference and propagate it to the others.
-- References: one CTE per spec stage, in stage order, month spine from `dim_date` (never
+- References: one CTE per spec stage, in stage order, month grid from `dim_date` (never
   generated; the calendar runs 2025-12-01..2031-12-31, past the data at both ends, and
-  each account's billing span bounds the spine), all money in `DECIMAL(28,14)` with a
+  each account's billing span bounds the grid), all money in `DECIMAL(28,14)` with a
   single `ROUND` at the end.
   `materialized` CTE hints are performance-only.
 - Inherited queries are deliberately ugly (comma joins, deep nesting, copy-pasted

@@ -9,7 +9,7 @@ with recursive
 -- ---------------------------------------------------------------- calendar
 
 -- One row per calendar month, straight from the warehouse calendar. Nothing
--- about the month spine is generated in the query: days_in_month is a row
+-- about the month grid is generated in the query: days_in_month is a row
 -- count and next_month_start is the day after the month's last row.
 calendar as (
     select
@@ -84,7 +84,7 @@ account as (
     cross join extract_end
 ),
 
--- Every (account, month) the account is billed for. This is the spine every
+-- Every (account, month) the account is billed for. This is the grid every
 -- later stage hangs off, so a month with no seats, no usage and no credits
 -- still gets an invoice row.
 billing_month as materialized (

@@ -12,7 +12,7 @@ to the patient's **current** `dim_patient` version:
     where dim_patient.status = 'deceased'
 ```
 
-`valid_to IS NULL` is the tape's end, not "now" and not "then": it reads
+`valid_to IS NULL` is the extract's end, not "now" and not "then": it reads
 every patient's **final** status into all of history. A patient who died in
 November 2025 but had three earlier spells now contributes a "death" to each
 of those spells' admission months. 78 real deaths become 119 phantom ones

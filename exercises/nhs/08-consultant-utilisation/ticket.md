@@ -19,7 +19,7 @@ belongs to a consultant, so there is no `unattributed` bucket):
 - **Denominator**: `dim_consultant.capacity` × days in month, summed over
   the specialty's consultants.
 - **Value**: 100 × numerator / denominator, the usual single rounding.
-- Dense on the spine like every family: 36 months × 6 specialties = 216 new
+- Dense on the grid like every family: 36 months × 6 specialties = 216 new
   rows, 2,592 total. Update the header contract (19 metric keys).
 
 Two warnings from the data dictionary: `fact_consultant_caseload.caseload`

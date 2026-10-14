@@ -5,7 +5,7 @@
 **Kind:** Bug, location known — understanding it is the deliverable
 
 Since last sprint the seat bill has been running light. Very light: summed
-over the whole run it reports **$11.09M** of seat charges where my own
+over our full five years it reports **$11.09M** of seat charges where my own
 spot-checks reconcile to **$17.89M** — about 38% of seat revenue gone, 417
 of our 541 companies affected, every single error downward. Our biggest
 account, CMP-00002, is low in essentially every month it has ever been

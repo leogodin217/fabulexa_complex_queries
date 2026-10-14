@@ -4,23 +4,23 @@
 -- interval-based utilisation the metric catalog promises. Time-weighted
 -- caseload (the VARCHAR caseload cast at the boundary; open intervals run
 -- to the extract end) over capacity x days, per consultant specialty,
--- dense on the spine like every other family: 36 x 6 = 216 new rows,
+-- dense on the grid like every other family: 36 x 6 = 216 new rows,
 -- 2,592 total.
 -- ============================================================================
 --
 -- One statement, one WITH chain, strictly layered:
 --
 --     base extracts  ->  conforming CTEs  ->  one CTE family per metric
---                    ->  spine assembly   ->  final presentation
+--                    ->  grid assembly   ->  final presentation
 --
 -- Runs against datasets/nhs/warehouse.duckdb. The data dictionary and the
 -- metric catalog this query implements are in datasets/nhs/README.md; the
 -- pinned side of every ambiguity is in ../spec.md. Every metric family is
 -- independently SELECT-able: replace the final select with
--- `select * from <family>_rows` to see one family on its spine.
+-- `select * from <family>_rows` to see one family on its grid.
 --
 -- Output: one row per month x specialty x metric — dense. Every family
--- emits a row for every spine month and every value of its specialty
+-- produces a row for every grid month and every value of its specialty
 -- domain; a quiet month is numerator 0, denominator 0, value NULL, never a
 -- missing row. 36 months x 72 (metric, specialty) pairs = 2,592 rows, and
 -- (month, specialty, metric) is unique, so a set-diff against a known-good
@@ -180,7 +180,7 @@
 --                                   valid_to IS NULL version).
 --
 -- Time conventions: the extract ends at the last fact_pathway_state entry,
--- read from the data; the month spine is dim_date months between the first
+-- read from the data; the month grid is dim_date months between the first
 -- and last pathway entry (the calendar itself runs years past the data —
 -- 877 confirmed bookings open slots after the extract ends). An instant
 -- belongs to the month of its *_date_key day; interval membership is
@@ -202,7 +202,7 @@ with
 -- ---------------------------------------------------------------- calendar
 
 -- One row per calendar month, straight from the warehouse calendar. Nothing
--- about the spine is generated in the query: days_in_month is a row count
+-- about the grid is generated in the query: days_in_month is a row count
 -- and next_month_start is the day after the month's last row.
 calendar as (
     select
@@ -225,10 +225,10 @@ activity_window as (
     from fact_pathway_state
 ),
 
--- The month spine: calendar months that overlap the activity window. The
+-- The month grid: calendar months that overlap the activity window. The
 -- warehouse calendar runs three years past the data (bookings open slots
 -- after the extract ends); grouping all of dim_date would manufacture
--- empty years, so the spine is bounded here, once, for every family.
+-- empty years, so the grid is bounded here, once, for every family.
 spine_month as materialized (
     select
         calendar.month_start,
@@ -367,7 +367,7 @@ ward_stay_interval as (
         on spell.episode_id = fact_admitted_care.episode_id
 ),
 
--- Every census day in the spine, with its month.
+-- Every census day in the grid, with its month.
 census_day as (
     select
         dim_date.date,
@@ -1061,10 +1061,10 @@ dna_rows as (
         and dna_monthly.imd_quintile = imd_quintile_domain.imd_quintile
 ),
 
--- ============================================================ spine assembly
+-- ============================================================ grid assembly
 
 -- Every family on the common shape. The pack is dense by construction:
--- each family cross-joined its spine months with its specialty domain
+-- each family cross-joined its grid months with its specialty domain
 -- before its aggregate was left-joined on, so this union never loses a
 -- quiet month.
 assembled as (

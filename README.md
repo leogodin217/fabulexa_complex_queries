@@ -95,12 +95,13 @@ Windows: `setup.bat`, `run.bat`, `check.bat` — same arguments use \ instead of
 | [`nhs`](datasets/nhs/README.md) | An acute NHS hospital trust over three years — A&E, inpatient wards, outpatient clinics, diagnostics, cancer and surgical pathways, with an SCD-2 patient dimension and a calibrated NHS metric catalog (4-hour standard, cancer waits, DM01, readmissions, occupancy, tariff income, IMD inequality gradients) | [performance-pack maintenance exercises](exercises/nhs/README.md), 10 tickets |
 
 Warehouses are produced by [fabulexa-forge](https://github.com/leogodin217/fabulexa_forge)
-from simulated base-layer emits; each dataset's `PROVENANCE.md` records the
+from simulated base-layer exports; each dataset's `PROVENANCE.md` records the
 source pack, producer version and digests so it can be regenerated.
 
 ## Ask a colleague
 
-Each track ships three persona files under `exercises/<name>/personas/`. Paste
+The saas-billing track ships three persona files under
+`exercises/saas-billing/personas/` (the nhs track has none yet). Paste
 one into any LLM as its system prompt and it answers as a person at the
 company: a customer success director who knows the deals, a billing analyst
 who knows the numbers, or an analytics engineer who knows the warehouse. Each

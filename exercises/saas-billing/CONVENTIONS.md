@@ -42,12 +42,12 @@ the order rows happen to be summed in, or on how a query is restructured.
 
 ## Time
 
-- **The month spine is the warehouse calendar.** `dim_date` (one row per day,
+- **The month grid is the warehouse calendar.** `dim_date` (one row per day,
   2025-12-01 to 2031-12-31) grouped by `year, month` gives every billing
   month's `month_start`, `next_month_start`, and `days_in_month` (its row
   count). Nothing is generated in the query. The calendar runs past the data
   at both ends (December 2025 and all of 2031 have no billing activity), so
-  the spine is not the whole calendar: it is bounded by each account's
+  the grid is not the whole calendar: it is bounded by each account's
   billing span (provisioning month through churn month or the end of the
   extract, as above), and no other month appears in the output.
 - **An instant belongs to the month of its `*_date_key`** (`dim_account.

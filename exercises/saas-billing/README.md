@@ -9,7 +9,7 @@ against the tier's reference: same columns, same rows, exactly.
 | Path | What it is |
 |---|---|
 | `CONVENTIONS.md` | The pinned billing conventions every query implements — read first |
-| `<tier>/reference.sql` | The clean form: one CTE per stage, in spec order; its month spine is the warehouse calendar (`dim_date`), bounded by each account's billing span and reached through the `*_date_key` columns |
+| `<tier>/reference.sql` | The clean form: one CTE per stage, in spec order; its month grid is the warehouse calendar (`dim_date`), bounded by each account's billing span and reached through the `*_date_key` columns |
 | `<tier>/inherited.sql` | The same bill as it would look after years of maintenance — identical output |
 | `NN-*/` | Debug tickets (nhs-style): `ticket.md` + `query.sql` (a tier query with one planted silent bug) + `solution.md` — see [Debug tickets](#debug-tickets) |
 | `personas/` | Three colleagues to ask (`manager.md`, `finance.md`, `data-engineer.md`) as LLM system prompts, plus `examples.md`, worked invoices in tables for made-up accounts — see its [README](personas/README.md) |
@@ -65,7 +65,7 @@ company-month — a learner can check beginner work against the full invoice.
 
 | Tier | Stages | Output columns | Inherited form |
 |---|---|---|---|
-| `beginner/` | 1, 2, 8 — prorated seats × price, flat add-ons | `seat_charge`, `addon_charge`, `total_due` | ~30 lines: terse aliases, comma joins, a digits-table month spine, hardcoded fees, one level of nesting |
+| `beginner/` | 1, 2, 8 — prorated seats × price, flat add-ons | `seat_charge`, `addon_charge`, `total_due` | ~30 lines: terse aliases, comma joins, a digits-table month grid, hardcoded fees, one level of nesting |
 | `intermediate/` | 1–8 — adds usage from the JSON payload, promo/trial exclusion, allowance, tiered rating with the `custom_tier` override, negotiated discount | + `usage_charge` | ~60 lines: nested four deep, the seat subquery copy-pasted, plan constants inlined, the ladder override as a `COALESCE` of correlated aggregates; no recursion, no running balance |
 | `advanced/` | 1–10 — adds commit drawdown and the FIFO credit ledger | + `commit_charge`, `commit_applied`, `credit_applied` | ~100 lines, longest line 1,600+ chars: everything above plus a cross-month running balance and a recursive ledger that is correct only because of an unstated data property |
 

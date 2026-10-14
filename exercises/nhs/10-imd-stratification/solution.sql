@@ -6,20 +6,20 @@
 -- One statement, one WITH chain, strictly layered:
 --
 --     base extracts  ->  conforming CTEs  ->  one CTE family per metric
---                    ->  spine assembly   ->  final presentation
+--                    ->  grid assembly   ->  final presentation
 --
 -- Runs against datasets/nhs/warehouse.duckdb. The data dictionary and the
 -- metric catalog this query implements are in datasets/nhs/README.md; the
 -- pinned side of every ambiguity is in ../spec.md. Every metric family is
 -- independently SELECT-able: replace the final select with
--- `select * from <family>_rows` to see one family on its spine.
+-- `select * from <family>_rows` to see one family on its grid.
 --
 -- Output: one row per month x specialty x metric x imd_quintile — dense.
--- Every patient-anchored family emits strata 'q1'..'q5' (q1 = the most
+-- Every patient-anchored family produces strata 'q1'..'q5' (q1 = the most
 -- deprived fifth; quintile = ceil(imd_decile / 2.0), read from the
 -- dim_patient version in force at the family's anchor instant) plus the
 -- roll-up stratum 'all'; the estate families (occupancy, theatre, income,
--- bed-day cost — their denominators are capacity, not patients) emit 'all'
+-- bed-day cost — their denominators are capacity, not patients) produce 'all'
 -- only. The 'all' slice equals the unstratified pack value for value.
 -- A quiet cell is numerator 0, denominator 0, value NULL, never a missing
 -- row. 36 months x 232 (metric, specialty, stratum) pairs = 8,352 rows,
@@ -170,7 +170,7 @@
 --                                   other patient-anchored family.
 --
 -- Time conventions: the extract ends at the last fact_pathway_state entry,
--- read from the data; the month spine is dim_date months between the first
+-- read from the data; the month grid is dim_date months between the first
 -- and last pathway entry (the calendar itself runs years past the data —
 -- 877 confirmed bookings open slots after the extract ends). An instant
 -- belongs to the month of its *_date_key day; interval membership is
@@ -192,7 +192,7 @@ with
 -- ---------------------------------------------------------------- calendar
 
 -- One row per calendar month, straight from the warehouse calendar. Nothing
--- about the spine is generated in the query: days_in_month is a row count
+-- about the grid is generated in the query: days_in_month is a row count
 -- and next_month_start is the day after the month's last row.
 calendar as (
     select
@@ -215,10 +215,10 @@ activity_window as (
     from fact_pathway_state
 ),
 
--- The month spine: calendar months that overlap the activity window. The
+-- The month grid: calendar months that overlap the activity window. The
 -- warehouse calendar runs three years past the data (bookings open slots
 -- after the extract ends); grouping all of dim_date would manufacture
--- empty years, so the spine is bounded here, once, for every family.
+-- empty years, so the grid is bounded here, once, for every family.
 spine_month as materialized (
     select
         calendar.month_start,
@@ -268,8 +268,8 @@ patient_version as materialized (
     from dim_patient
 ),
 
--- The stratum domain every patient-anchored family emits over: the five
--- quintiles plus the 'all' roll-up. Estate families emit 'all' only.
+-- The stratum domain every patient-anchored family produces over: the five
+-- quintiles plus the 'all' roll-up. Estate families produce 'all' only.
 stratum_domain as (
     select 'q' || unnest(generate_series(1, 5)) as imd_quintile
     union all
@@ -392,7 +392,7 @@ ward_stay_interval as (
         on spell.episode_id = fact_admitted_care.episode_id
 ),
 
--- Every census day in the spine, with its month.
+-- Every census day in the grid, with its month.
 census_day as (
     select
         dim_date.date,
@@ -1098,10 +1098,10 @@ dna_rows as (
         and dna_monthly.imd_quintile = stratum_domain.imd_quintile
 ),
 
--- ============================================================ spine assembly
+-- ============================================================ grid assembly
 
 -- Every family on the common shape. The pack is dense by construction:
--- each family cross-joined its spine months with its specialty domain
+-- each family cross-joined its grid months with its specialty domain
 -- before its aggregate was left-joined on, so this union never loses a
 -- quiet month.
 assembled as (

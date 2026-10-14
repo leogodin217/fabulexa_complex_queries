@@ -11,7 +11,7 @@ about the NHS — it is wrong about *this* pack, and the diff will say where.
 ## Output
 
 One row per **month × specialty × metric**. The key is unique and the row
-inventory is **dense**: every family emits a row for every spine month and
+inventory is **dense**: every family produces a row for every grid month and
 every value of its specialty domain, whether or not anything happened —
 a quiet month is `numerator 0, denominator 0, value NULL`, not a missing row.
 Set-diff verification depends on this: a candidate that drops empty rows is
@@ -41,10 +41,10 @@ Row inventory: 36 months × 66 (metric, specialty) pairs = **2,376 rows**.
 - **The extract ends** at the last `fact_pathway_state.entered_at`
   (2025-12-31 00:00:00 in this build). It is read from the data, never
   written into the query.
-- **The month spine** is `dim_date` grouped by year, month, kept between the
+- **The month grid** is `dim_date` grouped by year, month, kept between the
   first and last `fact_pathway_state.entered_at` (2023-01 … 2025-12, 36
   months). The calendar runs to 2028-12-31 because confirmed bookings open
-  slots after the extract ends; a spine over all of `dim_date` manufactures
+  slots after the extract ends; a grid over all of `dim_date` manufactures
   three empty years.
 - **An instant belongs to the month of its `*_date_key`** row on `dim_date`;
   the key renders the same UTC day as the timestamp beside it, so
