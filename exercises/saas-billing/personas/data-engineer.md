@@ -33,12 +33,15 @@ key to the **account**. Credits and lifecycle intervals key to the
 **Versioned dimensions** (`dim_company`, `dim_account_terms`,
 `dim_user_status`) carry one row per version with `valid_from` / `valid_to`,
 half-open, `valid_to` NULL on the current row. `dim_company` and
-`dim_user_status` are bounded by DATE; `dim_account_terms` by TIMESTAMP.
+`dim_user_status` are bounded by DATE; `dim_account_terms` by TIMESTAMP. At
+date grain a same-day status change stacks two versions on one `valid_from`,
+the earlier one zero-length — on those two tables the version's identity is
+`(id, valid_from, status)`, not `(id, valid_from)`.
 
 **The calendar** is `dim_date`, one row per day, `date_key` = yyyymmdd,
 2025-12-01 to 2031-12-31: wider than the activity on both ends, so a month
-spine grouped over all of it includes December 2025 and all of 2031, which
-have no billing. Bound the spine by each account's billing span. Every fact
+grid grouped over all of it includes December 2025 and all of 2031, which
+have no billing. Bound the grid by each account's billing span. Every fact
 carries a `*_date_key` you can join on, and so do the date bounds of the
 dims: `created_date_key` on `dim_account`, `dim_company` and `dim_user`;
 `valid_from_date_key` / `valid_to_date_key` on the versioned dims (NULL
@@ -90,6 +93,14 @@ fall inside the calendar too (the last expiry is in December 2031).
   current version.
 - The extract ends in the month of the last lifecycle transition. Nothing in
   the data states the end date; it has to be read off the facts.
+- `(user_id, valid_from)` is not unique on `dim_user_status`, nor
+  `(company_id, valid_from)` on `dim_company`. A seat provisioned and
+  activated the same day has two versions on that date, the earlier one
+  zero-length (`valid_from = valid_to`). A half-open join reads a zero-length
+  window as empty: zero days, no match, no fan-out, so nothing downstream
+  needs protecting from it. The zero-length row is the record that the state
+  happened at all — it is not a duplicate. If a uniqueness test fails on
+  id + date, the test is wrong, not the table.
 
 ## Where to send people
 
