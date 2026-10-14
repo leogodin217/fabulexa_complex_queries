@@ -16,7 +16,7 @@ reference takes.
 | Path | What it is |
 |---|---|
 | `spec.md` | The pinned conventions: output contract, time rules, specialty attribution, all 18 metric definitions, censoring cutoffs |
-| `reference/performance_pack.sql` | The known-good monthly performance pack: one statement, one `WITH` chain, 18 metrics on a dense month × specialty spine (2,376 rows, unique key) |
+| `reference/performance_pack.sql` | The known-good monthly performance pack: one statement, one `WITH` chain, 18 metrics on a dense month × specialty grid (2,376 rows, unique key) |
 | `check.sql` | `pack_diff(expected, actual)` — the `EXCEPT ALL` table macro the harness uses |
 | `NN-*/` | One exercise each: `ticket.md` (start here) + `query.sql` (the pack as the ticket hands it to you) + `solution.md` / `solution.sql` (spoilers — openly readable, by design) |
 

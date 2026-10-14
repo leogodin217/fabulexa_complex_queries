@@ -27,7 +27,7 @@ day), so the row that gets deleted is always the one that spans time.
 `dim_user_status` versions are **date-grained**: `valid_from` and
 `valid_to` are `DATE`, not timestamps. A seat that changes state twice in
 one day therefore legitimately puts two versions on the same
-`(user_id, valid_from)` — and the simulation does this constantly, because
+`(user_id, valid_from)` — and the warehouse does this constantly, because
 provisioning and activation routinely happen the same day:
 
 | user | status | valid_from | valid_to |
@@ -72,7 +72,7 @@ billable tail) and, in the two pairs where a seat was activated and
 offboarded the same day, 2 `offboarded` versions nothing billable ever
 read. USR-000001 above keeps only its zero-length `provisioned`
 row and its `offboarded` row: 357 days of a live seat, gone. Summed over
-the run: $6.80M of $17.89M in seat charges (38%), 7,935 of 10,284
+the five years: $6.80M of $17.89M in seat charges (38%), 7,935 of 10,284
 company-months, 417 of 541 companies, every error downward — seat-days can
 only be removed by this bug, never added.
 

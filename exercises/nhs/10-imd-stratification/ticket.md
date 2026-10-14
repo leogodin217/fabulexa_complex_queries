@@ -25,11 +25,11 @@ its type and meaning; final ordering adds `imd_quintile` last).
   admission-triage entry (one read per spell, used by both sides of each
   ratio); FFT = the response's `recorded_at`; DNA = the resolution
   milestone.
-- **Patient-anchored families** emit `q1..q5` and `all`. The `all` row must
+- **Patient-anchored families** produce `q1..q5` and `all`. The `all` row must
   equal the unstratified pack's value — the roll-up is your built-in
   regression check.
 - **Estate families** (bed occupancy, theatre utilisation, casemix income,
-  bed-day cost) emit `all` only: their denominators are capacity and
+  bed-day cost) produce `all` only: their denominators are capacity and
   catalogue, not patients.
 - The DNA family stops smuggling its strata through metric keys:
   `outpatient_dna_pct_imd_q1..q5` become one metric, `outpatient_dna_pct`,

@@ -18,7 +18,7 @@ The new definition for `fft_recommend_pct`:
 - **Denominator**: all invitations **sent** in the month
   (`fact_fft.occurred_at`) — a different event stream on a different
   instant. Do not filter one through the other; aggregate each in its own
-  month and join on the spine.
+  month and join on the grid.
 
 Everything else in the pack must not move. Expect the rate to drop — that is
 the point. (For the whole extract: 1,213 recommends over 2,286 invitations ≈
