@@ -11,6 +11,7 @@ against the tier's reference: same columns, same rows, exactly.
 | `CONVENTIONS.md` | The pinned billing conventions every query implements — read first |
 | `<tier>/reference.sql` | The clean form: one CTE per stage, in spec order; its month spine is the warehouse calendar (`dim_date`), bounded by each account's billing span and reached through the `*_date_key` columns |
 | `<tier>/inherited.sql` | The same bill as it would look after years of maintenance — identical output |
+| `NN-*/` | Debug tickets (nhs-style): `ticket.md` + `query.sql` (a tier query with one planted silent bug) + `solution.md` — see [Debug tickets](#debug-tickets) |
 | `personas/` | Three colleagues to ask (`manager.md`, `finance.md`, `data-engineer.md`) as LLM system prompts, plus `examples.md`, worked invoices in tables for made-up accounts — see its [README](personas/README.md) |
 
 The warehouse's data dictionary and the billing spec the queries implement are
@@ -71,6 +72,22 @@ company-month — a learner can check beginner work against the full invoice.
 Every column is `DECIMAL(12,2)`; `total_due` is the sum of the tier's rounded
 lines. On a current DuckDB every reference runs in a few seconds and a full
 `check` of any tier in under ten.
+
+## Debug tickets
+
+The nhs track's exercise shape, imported: a numbered directory holds a
+`ticket.md` (start here), a `query.sql` — one tier's reference with a single
+planted **silent** bug (same columns, same rows, wrong values) — and a
+`solution.md` (spoilers, openly readable by design). The ticket names the
+tier it grades against; as shipped the query is `DIFFERENT`, and a correct
+fix restores `EQUAL`. Each bug is one of the warehouse README's documented
+"Known traps", planted where the data actually bites, and the comment the
+bug hides behind states a *plausible* rule — spotting that the code
+contradicts the warehouse is the job.
+
+| # | Exercise | Tier graded against | Trap |
+|---|---|---|---|
+| 01 | `01-debug-the-dedupe` | beginner | A data-quality "fix" dedupes the SCD-2 seat dimension on `(user_id, valid_from)` — a key that was never unique at date grain — and silently deletes real seat history |
 
 ## Run and check
 

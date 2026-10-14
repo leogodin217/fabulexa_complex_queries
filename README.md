@@ -51,6 +51,9 @@ the queries and create your own comparison query. It's your learning journey, ow
 There are two kinds of track. The **saas-billing** track pairs a clean
 **reference** query with an **inherited** one — the same result after years
 of maintenance — and your job is to understand and refactor the ugly one.
+It also carries numbered debug tickets (`exercises/saas-billing/NN-*/`),
+nhs-style: a tier query with one planted silent bug, a ticket, and an open
+solution.
 The **nhs** track is the mirror image: one good ~1,000-line reference query
 (a monthly trust performance pack) plus ten maintenance tickets — six
 planted silent bugs to find and four change requests to land — with a
@@ -58,7 +61,7 @@ set-diff grader that compares any two packs row for row.
 
 ```
 datasets/<name>/      README.md (data dictionary + spec) · setup.sh / setup.bat · PROVENANCE.md
-exercises/saas-billing/      README.md · CONVENTIONS.md · <tier>/reference.sql · <tier>/inherited.sql
+exercises/saas-billing/      README.md · CONVENTIONS.md · <tier>/reference.sql · <tier>/inherited.sql · NN-*/ (ticket.md + query.sql + solution.md)
 exercises/saas-billing/personas/   manager.md · finance.md · data-engineer.md · examples.md (ask-a-colleague prompts)
 exercises/nhs/        README.md · spec.md · reference/performance_pack.sql · check.sql · NN-*/ (ticket.md + query.sql + solution)
 scripts/              run.sh / run.bat · check.sh / check.bat (tier grader) · check-pack.sh / check-pack.bat (pack grader)
