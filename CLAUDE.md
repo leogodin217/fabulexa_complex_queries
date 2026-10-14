@@ -6,7 +6,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 SQL teaching exercises in two track shapes. The **tier track** (saas-billing): for each
 tier, a clean `reference.sql` and an `inherited.sql` (the same result after years of
-"maintenance"), plus an exact grader. The **pack track** (nhs): one clean ~1,000-line
+"maintenance"), plus an exact grader; the track also carries numbered debug tickets
+(`exercises/saas-billing/NN-*/`: `ticket.md` + `query.sql` + `solution.md`) — a tier's
+reference with one planted silent bug, graded by `check.sh` against the tier the ticket
+names. The **pack track** (nhs): one clean ~1,000-line
 reference query (`exercises/nhs/reference/performance_pack.sql`) and ten maintenance
 exercises — six variants with a single planted silent bug each, four change requests —
 graded by set-diff against the reference or the exercise's own `solution.sql`.
@@ -28,7 +31,8 @@ scripts/check-pack.sh nhs <expected.sql> <candidate.sql>         # pack grader: 
 
 `<tier>` is `beginner`, `intermediate`, or `advanced`. Sanity-check the saas track with
 `scripts/check.sh saas-billing <tier> exercises/saas-billing/<tier>/inherited.sql` (every
-inherited query must be `EQUAL`), and the nhs track per each exercise's `ticket.md`
+inherited query must be `EQUAL`; every saas `NN-*/query.sql` must be `DIFFERENT` against
+the tier its ticket names, and `EQUAL` once fixed), and the nhs track per each exercise's `ticket.md`
 acceptance line: the six bug exercises must be `DIFFERENT` against the reference as
 shipped (they carry the planted bug) and `EQUAL` once fixed; `03/06/08/10`'s
 `solution.sql` must be `EQUAL` to its ticket's expected side. `.bat` twins of each script
@@ -96,3 +100,9 @@ missing/unexpected). Consequences:
 - Inherited queries are deliberately ugly (comma joins, deep nesting, copy-pasted
   subqueries, 1,600-char lines) but must stay output-identical. Do not "clean them up";
   that is the learner's exercise.
+- `NN-*/` debug tickets follow the nhs bug-variant rules: `query.sql` is one tier's
+  reference with a single surgical planted bug, silent (same columns, same row
+  inventory, values only), each an instance of a dataset-README "Known traps" bullet.
+  The correct contract stays in the surrounding comments; the planted change carries a
+  plausible-but-wrong rationale. Don't fix a planted bug or its misleading comment
+  outside that exercise's solution flow.
