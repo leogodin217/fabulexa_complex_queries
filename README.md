@@ -96,7 +96,7 @@ Windows: `setup.bat`, `run.bat`, `check.bat` — same arguments use \ instead of
 
 Warehouses are produced by [fabulexa-forge](https://github.com/leogodin217/fabulexa_forge)
 from simulated base-layer exports; each dataset's `PROVENANCE.md` records the
-source pack, producer version and digests so it can be regenerated.
+source archive, producer version and digests so it can be regenerated.
 
 ## Ask a colleague
 

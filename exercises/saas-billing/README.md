@@ -80,7 +80,11 @@ The nhs track's exercise shape, imported: a numbered directory holds a
 planted **silent** bug (same columns, same rows, wrong values) — and a
 `solution.md` (spoilers, openly readable by design). The ticket names the
 tier it grades against; as shipped the query is `DIFFERENT`, and a correct
-fix restores `EQUAL`. Each bug is one of the warehouse README's documented
+fix restores `EQUAL`. Solution forms follow the nhs rule: a bug ticket ships
+`solution.md` — a prose diagnosis — because the correct code is the tier's
+reference itself; a change request ships `solution.sql`, the expected query
+the grader runs against, with its rationale required in the file's header
+comment. Each bug is one of the warehouse README's documented
 "Known traps", planted where the data actually bites, and the comment the
 bug hides behind states a *plausible* rule — spotting that the code
 contradicts the warehouse is the job.
