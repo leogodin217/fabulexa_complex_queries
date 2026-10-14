@@ -64,6 +64,12 @@ exercises and 03 verify against `reference/performance_pack.sql` (a correct
 fix restores the canonical output — output equality, not textual similarity,
 is the standard); 06, 08 and 10 verify against their own `solution.sql`.
 
+The two solution forms are deliberate, not drift: a bug ticket ships
+`solution.md` — a prose diagnosis — because the correct code is the
+reference itself; a change request ships `solution.sql`, the expected query
+(for 06, 08 and 10 it is also the acceptance oracle the check runs against),
+with its rationale required in the file's header comment.
+
 Working inside `duckdb` directly, the same comparison is two temp views and
 the macro:
 
