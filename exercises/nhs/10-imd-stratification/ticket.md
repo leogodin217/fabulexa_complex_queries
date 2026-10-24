@@ -1,8 +1,8 @@
-# PACK-110 — Stratify the whole pack by deprivation quintile (capstone)
+# PACK-110 — Stratify the whole pack by deprivation quintile
 
 **From:** Board, via the health inequalities programme
 **Severity:** Normal — but it touches every family
-**Kind:** Change request (the capstone: a grain change)
+**Kind:** Change request (a grain change)
 
 The board wants the inequality lens on **everything**, not just DNAs. Add an
 `imd_quintile` column to the pack and cut every patient-anchored family by

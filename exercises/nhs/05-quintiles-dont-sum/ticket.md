@@ -28,4 +28,4 @@ is not uniform), and restore the pack.
 scripts/check-pack.sh nhs exercises/nhs/reference/performance_pack.sql exercises/nhs/05-quintiles-dont-sum/query.sql
 ```
 
-prints `EQUAL`. Full explanation in `solution.md` (spoilers).
+prints `EQUAL`. Full explanation in `solution.md`.

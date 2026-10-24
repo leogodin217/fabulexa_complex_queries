@@ -27,4 +27,4 @@ explain why it only bites at the end of the extract, and restore the pack.
 scripts/check-pack.sh nhs exercises/nhs/reference/performance_pack.sql exercises/nhs/07-empty-beds/query.sql
 ```
 
-prints `EQUAL`. Full explanation in `solution.md` (spoilers).
+prints `EQUAL`. Full explanation in `solution.md`.

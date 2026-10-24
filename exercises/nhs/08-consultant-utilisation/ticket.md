@@ -4,9 +4,9 @@
 **Severity:** Normal
 **Kind:** Change request (new family)
 
-The metric catalog promises interval-based consultant utilisation ("the old
-track could only count events; here allocation is an interval fact with a
-capacity denominator") and the pack still doesn't carry it. Add the family.
+The metric catalog promises interval-based consultant utilisation
+("allocation is an interval fact with a capacity denominator, not an event
+count") and the pack still doesn't carry it. Add the family.
 
 **`consultant_utilisation_pct`** — time-weighted caseload over capacity,
 per **consultant specialty** (the native domain: a caseload interval always

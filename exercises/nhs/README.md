@@ -1,8 +1,8 @@
 # NHS performance pack — maintenance exercises
 
-The second flagship track, and the opposite exercise to saas-billing's.
-That track hands you bad code that produces right answers and asks you to
-decode it. This one hands you **good code** — a single ~1,000-line layered
+The second of the repo's two exercise sets, and the opposite of
+saas-billing's. That set hands you bad code that produces right answers and
+asks you to decode it. This one hands you **good code** — a single ~1,000-line layered
 reference query over the `nhs` warehouse — and asks you to *live inside
 it*: find planted silent bugs from a ticket, and land change requests
 without breaking the other seventeen metrics.
@@ -17,7 +17,7 @@ reference takes.
 |---|---|
 | `spec.md` | The pinned conventions: output contract, time rules, specialty attribution, all 18 metric definitions, censoring cutoffs |
 | `reference/performance_pack.sql` | The known-good monthly performance pack: one statement, one `WITH` chain, 18 metrics on a dense month × specialty grid (2,376 rows, unique key) |
-| `check.sql` | `pack_diff(expected, actual)` — the `EXCEPT ALL` table macro the harness uses |
+| `check.sql` | `pack_diff(expected, actual)` — the `EXCEPT ALL` table macro `scripts/check-pack.sh` uses |
 | `NN-*/` | One exercise each: `ticket.md` (start here) + `query.sql` (the pack as the ticket hands it to you) + `solution.md` / `solution.sql` (spoilers — openly readable, by design) |
 
 ## The exercises
@@ -25,7 +25,7 @@ reference takes.
 Six tickets carry a single planted silent bug — the query runs clean, keeps
 its exact shape, and produces plausible wrong numbers. Four are change
 requests against the pristine reference. The ramp: the first two bugs tell
-you where to look (navigation training), the middle ones give you only a
+you where to look, the middle ones give you only a
 symptom, the last one gives you nothing but a diff against the known-good.
 
 | # | Exercise | Kind | You get |

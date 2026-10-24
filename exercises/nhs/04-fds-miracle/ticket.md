@@ -33,4 +33,4 @@ scripts/check-pack.sh nhs exercises/nhs/reference/performance_pack.sql exercises
 ```
 
 prints `EQUAL`, and your explanation says *why* the number moved in the
-direction it did. Full explanation in `solution.md` (spoilers).
+direction it did. Full explanation in `solution.md`.

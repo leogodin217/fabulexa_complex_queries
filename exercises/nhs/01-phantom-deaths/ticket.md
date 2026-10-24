@@ -28,4 +28,4 @@ scripts/check-pack.sh nhs exercises/nhs/reference/performance_pack.sql exercises
 ```
 
 prints `EQUAL`. Fix `query.sql` in place; the full explanation is in
-`solution.md` (spoilers).
+`solution.md`.
