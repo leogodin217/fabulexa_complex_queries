@@ -22,5 +22,5 @@ interval membership is defined.
 scripts/check-pack.sh nhs exercises/nhs/reference/performance_pack.sql exercises/nhs/02-double-counted-attendances/query.sql
 ```
 
-prints `EQUAL`. Fix `query.sql` in place; full explanation in `solution.md`
-(spoilers).
+prints `EQUAL`. Fix `query.sql` in place; full explanation in
+`solution.md`.

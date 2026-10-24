@@ -20,16 +20,15 @@ a few batteries included.
 
 ## Data
 
-Each dataset (Just one for now) is a finished DuckDB warehouse published as a release asset of
+Each dataset is a finished DuckDB warehouse published as a release asset of
 this repo and fetched by a one-line setup script. Saas-billing contains a data warehouse for a 
-fictional SaaS company. The data should look realistic enough and the billing process is quite 
-complex. See [datasets/saas-billing/README.md](datasets/saas-billing/README.md) for details. 
+fictional SaaS company. NHS represents a National Health Services of England Trust (or hospital if you live elsewhere). The data should look realistic enough.
 
-Download the [DuckDB](https://github.com/leogodin217/fabulexa_complex_queries/releases/download/saas-billing-v3/saas-billing.duckdb) file from releases or use one of the setup scripts in [datasets/saas-billing/]. 
 
 
 ## Exercises
 
+[SaaS Billing](exercises/saas-billing/README.md). This one is tough. 
 These are tough. Tough enough that I created the dataset and it is still confusing. That tough. 
 They are designed to allow practicing something we'll all encounter. Complex queries that are 
 difficult to figure out. In particular, I asked Claude to write the most bad-practice filled, obtuse, 
@@ -40,24 +39,20 @@ At this time, there are no data-quality issues. The data is good. You have enoug
 having to figure out why price-tier 1 and two have overlapping dates (Yes, I've seen that before). That 
 being said, it wouldn't be difficult to introduce those types of errors if anyone is interested. 
 
+[NHS](exercises/nhs/README.md): These start as a complex-but-well-written query. Each exercises introduces a bug
+you must fix. ticket.md has about as many details as you'd expect. Something is wrong. Fix it! Real world stuff.
+As you work through these, you should learn more and more about the data warehouse and that's the point. We 
+usually work within a data warehouse and learn it over time. Hopefully, you get that feeling with these. 
+
 **Highly Recommended**: Use [Dbeaver](https://dbeaver.io/) or some other tool with syntax highlighting, formatting
 etc. 
 
 To use the grader scripts, you'll need [DuckDB CLI](https://duckdb.org/docs/installation/) in your PATH
 (1.3 or newer — older releases run these queries an order of magnitude slowerand can run out 
 of memory on the advanced tier). Feel free to roll your own solution. Maybe create views out of 
-the queries and create your own comparison query. It's your learning journey, own it! 
+the queries and create your own comparison query. It's your learning journey. Own it! 
 
-There are two kinds of track. The **saas-billing** track pairs a clean
-**reference** query with an **inherited** one — the same result after years
-of maintenance — and your job is to understand and refactor the ugly one.
-It also carries numbered debug tickets (`exercises/saas-billing/NN-*/`),
-nhs-style: a tier query with one planted silent bug, a ticket, and an open
-solution.
-The **nhs** track is the mirror image: one good ~1,000-line reference query
-(a monthly trust performance pack) plus ten maintenance tickets — six
-planted silent bugs to find and four change requests to land — with a
-set-diff grader that compares any two packs row for row.
+
 
 ```
 datasets/<name>/      README.md (data dictionary + spec) · setup.sh / setup.bat · PROVENANCE.md
@@ -69,9 +64,11 @@ scripts/              run.sh / run.bat · check.sh / check.bat (tier grader) · 
 
 ### But Wait, There's More!
 
-Don't feel like you have to do these exercises. Using the docs to generate your own billing queries is a great
-exercise in itself. As is reverse engineering the queries and creating your own docs. 
-If you are teaching, introducing logic errors in the queries would be useful. Maybe adding
+Don't feel like you have to do these exercises as is. Using the docs to generate your own SaaS billing queries is a great
+exercise in itself. Feel free to break things and fix them. Optimize for performance. Load the data into something other 
+than DuckDB. 
+
+If you are teaching or writing, introducing your own logic errors in the queries would be useful. Maybe adding
 more override tables. If you want to teach/practice ETL, head on over to [Fabulexa Forge](https://github.com/leogodin217/fabulexa_forge)
 and use incremental export or introduce data-quality problems. 
 
